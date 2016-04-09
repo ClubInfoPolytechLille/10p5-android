@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private PendingIntent mPendingIntent;
     private IntentFilter[] mFilters;
     private String[][] mTechLists;
+    private Toast mToast;
 
     public void onResume() {
         super.onResume();
@@ -90,7 +92,9 @@ public class MainActivity extends AppCompatActivity {
     public void onNewIntent(Intent intent) {
         if (NfcAdapter.ACTION_TECH_DISCOVERED.equals(intent.getAction())) {
             String id_carte = ByteArrayToHexString(intent.getByteArrayExtra(NfcAdapter.EXTRA_ID));
-            System.out.println("NFC Tag : " + id_carte);
+            mToast = Toast.makeText(getApplicationContext(), "ID Carte : " + id_carte, Toast.LENGTH_SHORT);
+            mToast.show();
+            System.out.println("ID Carte : " + id_carte);
 
             //Lecture des données
             Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
@@ -123,9 +127,13 @@ public class MainActivity extends AppCompatActivity {
                                 prenom = dataStr;
                             else if (i == 3) //Nom
                                 nom = dataStr;
+                            mToast = Toast.makeText(getApplicationContext(), "Données lues : " + dataStr, Toast.LENGTH_SHORT);
+                            mToast.show();
                             System.out.println("Données lues : " + dataStr);
                         }
                     } else {
+                        mToast = Toast.makeText(getApplicationContext(), "Erreur lors de la connection au secteur 12.", Toast.LENGTH_SHORT);
+                        mToast.show();
                         System.out.println("Erreur lors de la connection au secteur 12.");
                     }
                     mfc.close();
@@ -137,9 +145,20 @@ public class MainActivity extends AppCompatActivity {
                 login = prenom;
                 login.concat(".");
                 login.concat(nom);
+                System.out.println("Prenom : " + prenom);
+                System.out.println("Nom : " + nom);
             }
             else
+            {
                 System.out.println("Pas de connection possible à la technologie Mifare Classic.");
+                mToast = Toast.makeText(getApplicationContext(), "Pas de connection possible à la technologie Mifare Classic.", Toast.LENGTH_SHORT);
+                mToast.show();
+            }
+
+            mToast = Toast.makeText(getApplicationContext(), "Login Lille 1 : " + login, Toast.LENGTH_SHORT);
+            mToast.show();
+            System.out.println("Login Lille 1 : " + login);
+
 
             //Éxécution de la fonction
             taFonction(id_carte, login);
