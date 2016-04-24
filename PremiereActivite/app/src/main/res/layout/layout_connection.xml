@@ -1,20 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.florian.premiereactivite.Menu">
+    android:layout_height="match_parent">
 
-    <EditText
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/principale"
-        android:text="Bonjours, veuillez entrez les informations suivantes" />
+        android:text="Bonjours, veuillez entrez les informations suivantes"
+        android:id="@+id/mainText"
+        android:inputType="none"
+        android:textAlignment="center"
+        android:textAppearance="@android:color/primary_text_light"
+        android:textColor="@color/abc_input_method_navigation_guard"
+        android:textSize="@dimen/abc_text_size_large_material"
+        android:textStyle="bold" />
 
     <AutoCompleteTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="identifiant"
+        android:text="Identifiant"
         android:id="@+id/identifiant_principal" />
 
     <MultiAutoCompleteTextView

@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$USER_HOME$/Documents/Polytech/Club Info/2016/10p5-android/PremiereActivite/PremiereActivite.iml" filepath="$USER_HOME$/Documents/Polytech/Club Info/2016/10p5-android/PremiereActivite/PremiereActivite.iml" />
-      <module fileurl="file://$USER_HOME$/Documents/Polytech/Club Info/2016/10p5-android/PremiereActivite/app/app.iml" filepath="$USER_HOME$/Documents/Polytech/Club Info/2016/10p5-android/PremiereActivite/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PremiereActivite.iml" filepath="$PROJECT_DIR$/PremiereActivite.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
 </project>
