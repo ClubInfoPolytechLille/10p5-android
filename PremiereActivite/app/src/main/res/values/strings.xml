@@ -3,11 +3,6 @@
     <string name="action_settings">Settings</string>
     <string name="identifiant" />
     <string name="password" />
-    <string name="menu_search">Test1</string>
-    <string name="menu_refresh">Test2</string>
-    <string name="menu_about">Test4</string>
-    <string name="menu_settings">Test5</string>
-    <string name="menu_help">Test3</string>
     <string name="validate">Valider</string>
     <string name="quant">Quantité</string>
     <string name="montant">Montant</string>
