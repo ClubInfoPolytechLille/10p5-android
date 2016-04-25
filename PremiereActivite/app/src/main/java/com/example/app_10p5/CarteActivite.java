@@ -3,11 +3,9 @@ package com.example.app_10p5;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.MifareClassic;
-import android.nfc.tech.NfcA;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -19,42 +17,28 @@ import java.io.IOException;
 public class CarteActivite extends Activity {
 
     private NfcAdapter mNfcAdapter;
-    private PendingIntent mPendingIntent;
-    private IntentFilter[] mFilters;
-    private String[][] mTechLists;
-    private Toast mToast;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_carte);
 
-        ////Code NFC -- Nécessaire
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
-        mPendingIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-
-        IntentFilter ndef = new IntentFilter(NfcAdapter.ACTION_TECH_DISCOVERED);
-
-        try {
-            ndef.addDataType("text/plain");
-        } catch (IntentFilter.MalformedMimeTypeException e) {
-            throw new RuntimeException("fail", e);
+        if (mNfcAdapter == null) {
+            // Stop here, we definitely need NFC
+            Toast.makeText(this, "This device doesn't support NFC.", Toast.LENGTH_LONG).show();
+            finish();
+            return;
         }
-        mFilters = new IntentFilter[] {
-                ndef,
-        };
 
-        // Setup a tech list for all NfcF tags
-        mTechLists = new String[][]{new String[]{NfcA.class.getName(), MifareClassic.class.getName()}};
+        handleIntent(getIntent());
     }
 
-    public void onResume() {
+    @Override
+    protected void onResume() {
         super.onResume();
-        if(mNfcAdapter != null)
-            mNfcAdapter.enableForegroundDispatch(this, mPendingIntent, mFilters, mTechLists);
+        setupForegroundDispatch(this, mNfcAdapter);
     }
 
     // Convertit l'array de byte en chaîne hexadécimale (si le byte = 0x63, str = "63").
@@ -74,14 +58,27 @@ public class CarteActivite extends Activity {
     }
 
     @Override
-    public void onNewIntent(Intent intent) {
-        mToast = Toast.makeText(getApplicationContext(), "ID Carte : ", Toast.LENGTH_SHORT);
-        mToast.show();
-        if (NfcAdapter.ACTION_TECH_DISCOVERED.equals(intent.getAction())) {
+    protected void onNewIntent(Intent intent) {
+        handleIntent(intent);
+    }
+
+    public void taFonction(String id_carte, String login)
+    {
+        //code fonction
+    }
+
+    @Override
+    protected void onPause() {
+        stopForegroundDispatch(this, mNfcAdapter);
+        super.onPause();
+    }
+
+    private void handleIntent(Intent intent){
+        if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
+            Toast toast;
             String id_carte = ByteArrayToHexString(intent.getByteArrayExtra(NfcAdapter.EXTRA_ID));
-            mToast = Toast.makeText(getApplicationContext(), "ID Carte : " + id_carte, Toast.LENGTH_SHORT);
-            mToast.show();
-            System.out.println("ID Carte : " + id_carte);
+            toast = Toast.makeText(getApplicationContext(), "ID Carte : " + id_carte, Toast.LENGTH_SHORT);
+            toast.show();
 
             //Lecture des données
             Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
@@ -92,13 +89,14 @@ public class CarteActivite extends Activity {
             if (mfc != null) {
                 try {
                     mfc.connect();
-                    String cardData = null;
 
                     //Clé A
                     byte[] cleA = new byte[]{(byte) 0xa0, (byte) 0xa1, (byte) 0xa2,
                             (byte) 0xa3, (byte) 0xa4, (byte) 0xa5};
+
                     //On veut juste lire le secteur 12
                     boolean estConnecte = mfc.authenticateSectorWithKeyA(12, cleA);
+
                     if (estConnecte) {
                         //Il y a 4 blocs dans le secteur 12 -> INE, numéro étudiant, prénom, nom
                         //On ne veut que prénom et nom, donc on passe les deux premiers
@@ -114,14 +112,12 @@ public class CarteActivite extends Activity {
                                 prenom = dataStr;
                             else if (i == 3) //Nom
                                 nom = dataStr;
-                            mToast = Toast.makeText(getApplicationContext(), "Données lues : " + dataStr, Toast.LENGTH_SHORT);
-                            mToast.show();
-                            System.out.println("Données lues : " + dataStr);
+                            toast = Toast.makeText(getApplicationContext(), "Données lues : " + dataStr, Toast.LENGTH_SHORT);
+                            toast.show();
                         }
                     } else {
-                        mToast = Toast.makeText(getApplicationContext(), "Erreur lors de la connection au secteur 12.", Toast.LENGTH_SHORT);
-                        mToast.show();
-                        System.out.println("Erreur lors de la connection au secteur 12.");
+                        toast = Toast.makeText(getApplicationContext(), "Erreur lors de la connection au secteur 12.", Toast.LENGTH_SHORT);
+                        toast.show();
                     }
                     mfc.close();
                 } catch (IOException e) {
@@ -132,33 +128,27 @@ public class CarteActivite extends Activity {
                 login = prenom;
                 login.concat(".");
                 login.concat(nom);
-                System.out.println("Prenom : " + prenom);
-                System.out.println("Nom : " + nom);
             } else {
-                System.out.println("Pas de connection possible à la technologie Mifare Classic.");
-                mToast = Toast.makeText(getApplicationContext(), "Pas de connection possible à la technologie Mifare Classic.", Toast.LENGTH_SHORT);
-                mToast.show();
+                toast = Toast.makeText(getApplicationContext(), "Pas de connection possible à la technologie Mifare Classic.", Toast.LENGTH_SHORT);
+                toast.show();
             }
 
-            mToast = Toast.makeText(getApplicationContext(), "Login Lille 1 : " + login, Toast.LENGTH_SHORT);
-            mToast.show();
-            System.out.println("Login Lille 1 : " + login);
-
+            toast = Toast.makeText(getApplicationContext(), "Login Lille 1 : " + login, Toast.LENGTH_SHORT);
+            toast.show();
 
             //Éxécution de la fonction
             taFonction(id_carte, login);
         }
     }
 
-    public void taFonction(String id_carte, String login)
-    {
-        //code fonction
+    public static void setupForegroundDispatch(final Activity activity, NfcAdapter adapter){
+        final Intent intent = new Intent(activity.getApplicationContext(), activity.getClass());
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        final PendingIntent pendingIntent = PendingIntent.getActivity(activity.getApplicationContext(), 0, intent, 0);
+        adapter.enableForegroundDispatch(activity, pendingIntent, null, null);
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        if(mNfcAdapter != null)
-            mNfcAdapter.disableForegroundDispatch(this);
+    public static void stopForegroundDispatch(final Activity activity, NfcAdapter adapter) {
+        adapter.disableForegroundDispatch(activity);
     }
 }

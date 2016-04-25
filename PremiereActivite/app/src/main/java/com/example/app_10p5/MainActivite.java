@@ -1,6 +1,12 @@
 package com.example.app_10p5;
 
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
+import android.nfc.tech.MifareClassic;
+import android.nfc.tech.NfcA;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
@@ -8,6 +14,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.Toast;
+
+import java.io.IOException;
 
 /**
  * Created by beaus on 24/04/2016.
@@ -55,4 +64,5 @@ public class MainActivite extends FragmentActivity {
         Intent intent = new Intent(this, CarteActivite.class);
         startActivity(intent);
     }
+
 }

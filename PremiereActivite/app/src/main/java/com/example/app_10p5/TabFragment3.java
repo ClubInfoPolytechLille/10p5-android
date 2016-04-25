@@ -7,6 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+/**
+ * Created by beaus on 24/04/2016.
+ */
+
 public class TabFragment3 extends Fragment {
 
     @Override

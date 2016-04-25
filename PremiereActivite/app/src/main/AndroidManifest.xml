@@ -2,8 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.app_10p5">
 
+    <!-- Nécessaire pour utiliser les cartes NFC -->
     <uses-permission android:name="android.permission.NFC" />
-    <uses-sdk android:minSdkVersion="22"/>
+    <uses-sdk android:minSdkVersion="20"/>
     <uses-feature android:name="android.hardware.nfc" android:required="true" />
 
     <application
@@ -13,32 +14,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.example.app_10p5.MainActivite"
-            android:label="10p5">
+            android:name=".CarteActivite"
+            android:launchMode="singleTask"
+            android:label="CarteActivite"
+            android:parentActivityName="com.example.app_10p5.MainActivite" >
+        </activity>
+
+        <activity
+            android:name=".MainActivite"
+            android:label="MainActivite">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.example.app_10p5.CarteActivite"
-            android:label="CarteActivite"
-            android:parentActivityName="com.example.app_10p5.MainActivite" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.app_10p5.MainActivite"
-                android:resource="@xml/tech" />
-            <intent-filter> <!-- Prioritaire mais je n'ai pas réussi à le faire fonctionner -->
-                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="text/plain" />
-            </intent-filter>
-            <intent-filter> <!-- Regardé juste après les NDEF -->
-                <action android:name="android.nfc.action.TECH_DISCOVERED"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </activity>
-
     </application>
 
 </manifest>
