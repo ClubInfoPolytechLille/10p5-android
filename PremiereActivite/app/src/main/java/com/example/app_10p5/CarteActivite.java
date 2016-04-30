@@ -9,19 +9,55 @@ import android.nfc.tech.MifareClassic;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.net.URL;
+import java.util.HashMap;
 
 /**
  * Created by beaus on 24/04/2016.
  */
-public class CarteActivite extends Activity {
+public class CarteActivite extends Activity implements ASyncResponse {
 
     private NfcAdapter mNfcAdapter;
+    private HashMap<String, String> mParam;
+    private String mAPI;
+
+    public static final String HOST = "https://10p5.clubinfo.frogeye.fr/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_carte);
+
+        switch (getIntent().getIntExtra("state", MainActivite.STATE_RIEN)) {
+
+            case MainActivite.STATE_COMMANDE:
+                mParam.put("quantite", String.valueOf(getIntent().getIntExtra("quantite", -1)));
+                mParam.put("montant", String.valueOf(getIntent().getFloatExtra("montant", -1)));
+                mParam.put("token", getIntent().getStringExtra("token"));
+                mAPI = "api/client/payer";
+                break;
+            case MainActivite.STATE_CREATION_COMPTE:
+                //TODO: param
+                mAPI = "api/client/ajouter";
+                break;
+            case MainActivite.STATE_RECHARGEMENT:
+                //TODO: param
+                mAPI = "api/client/recharger";
+                break;
+            case MainActivite.STATE_VIDANGE:
+                //TODO: param
+                mAPI = "api/client/vidange";
+                break;
+            case MainActivite.STATE_CONNEXION:
+            case MainActivite.STATE_RIEN:
+            default:
+                Toast.makeText(this, "WTF, le cancer est dans l'application!!", Toast.LENGTH_LONG).show();
+                finish();
+                return;
+        }
 
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
@@ -62,11 +98,6 @@ public class CarteActivite extends Activity {
         handleIntent(intent);
     }
 
-    public void taFonction(String id_carte, String login)
-    {
-        //code fonction
-    }
-
     @Override
     protected void onPause() {
         stopForegroundDispatch(this, mNfcAdapter);
@@ -77,6 +108,7 @@ public class CarteActivite extends Activity {
         if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
             Toast toast;
             String id_carte = ByteArrayToHexString(intent.getByteArrayExtra(NfcAdapter.EXTRA_ID));
+            mParam.put("ID", id_carte);
             toast = Toast.makeText(getApplicationContext(), "ID Carte : " + id_carte, Toast.LENGTH_SHORT);
             toast.show();
 
@@ -137,9 +169,9 @@ public class CarteActivite extends Activity {
             toast.show();
 
             //Éxécution de la fonction
-            taFonction(id_carte, login);
+            clientAPI();
+            }
         }
-    }
 
     public static void setupForegroundDispatch(final Activity activity, NfcAdapter adapter){
         final Intent intent = new Intent(activity.getApplicationContext(), activity.getClass());
@@ -150,5 +182,25 @@ public class CarteActivite extends Activity {
 
     public static void stopForegroundDispatch(final Activity activity, NfcAdapter adapter) {
         adapter.disableForegroundDispatch(activity);
+    }
+
+    public void clientAPI() {
+        try {
+            URL url = new URL(HOST + mAPI);
+            NetworkThread nt = new NetworkThread(url, mParam);
+            nt.execute();
+        }
+        catch (Throwable t){
+            Toast.makeText(this, "WTF, le cancer est dans l'application!!", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+    }
+
+
+    /* Retour du NetworkThread */
+    @Override
+    public void processFinish(JSONObject output) {
+        //TODO: faire un retour vers l'activity parente des données reçues.
     }
 }

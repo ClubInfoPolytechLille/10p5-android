@@ -4,6 +4,7 @@
 
     <!-- Nécessaire pour utiliser les cartes NFC -->
     <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-sdk android:minSdkVersion="20"/>
     <uses-feature android:name="android.hardware.nfc" android:required="true" />
 

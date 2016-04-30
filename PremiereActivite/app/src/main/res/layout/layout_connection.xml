@@ -15,22 +15,59 @@
         android:textSize="@dimen/abc_text_size_large_material"
         android:textStyle="bold" />
 
-    <AutoCompleteTextView
-        android:layout_width="match_parent"
+    <EditText
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Identifiant"
-        android:id="@+id/identifiant_principal" />
+        android:inputType="text"
+        android:ems="15"
+        android:id="@+id/connection_username"
+        android:editable="true"
+        android:elegantTextHeight="true"
+        android:enabled="true"
+        android:width="300dp"
+        android:hint="@string/identifiant"
+        android:textAlignment="center"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:height="150dp"
+        android:minHeight="50dp"
+        android:maxHeight="500dp"
+        android:minWidth="120dp"
+        android:textIsSelectable="true" />
 
-    <MultiAutoCompleteTextView
-        android:layout_width="match_parent"
+    <EditText
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="password"
-        android:id="@+id/password_principal" />
+        android:inputType="textPassword"
+        android:ems="15"
+        android:id="@+id/connection_password"
+        android:editable="true"
+        android:elegantTextHeight="true"
+        android:enabled="true"
+        android:width="300dp"
+        android:hint="@string/password"
+        android:textAlignment="center"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:height="150dp"
+        android:minHeight="50dp"
+        android:maxHeight="500dp"
+        android:minWidth="120dp"
+        android:textIsSelectable="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Validez"
-        android:id="@+id/validation_principal" />
+        android:text="@string/validate"
+        android:id="@+id/con_validation"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="40dp"
+        android:width="180dp"
+        android:height="80dp"
+        android:onClick="valideConnection"
+        android:nestedScrollingEnabled="false"
+        android:enabled="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
 
 </LinearLayout>

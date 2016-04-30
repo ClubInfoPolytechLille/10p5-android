@@ -10,11 +10,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/passCarte"
-        android:id="@+id/textView2"
+        android:id="@+id/textView_carte"
         android:layout_gravity="center_horizontal"
         android:enabled="true"
-        android:inputType="text"
         android:textAlignment="center"
-        android:textSize="50dp"
-        android:layout_marginTop="40dp" />
+        android:textSize="50sp"
+        android:layout_marginTop="40dp"
+        android:inputType="none" />
 </LinearLayout>
