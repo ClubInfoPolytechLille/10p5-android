@@ -2,6 +2,7 @@ package com.example.app_10p5;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -107,7 +108,7 @@ public class MainActivite extends FragmentActivity implements ASyncResponse {
 
     public void valideRechargement(View v)
     {
-        if((mToken != "") && ((System.currentTimeMillis() - mTimeToken) > 0)) {
+        if((mToken != "") && ((System.currentTimeMillis() - mTimeToken) < EXPIRATION)) {
 
         }
         else{
@@ -171,6 +172,22 @@ public class MainActivite extends FragmentActivity implements ASyncResponse {
     /* Retour du network thread */
     @Override
     public void processFinish(JSONObject output) {
-        //TODO: Uniquement pour la connexion
+        if(output.length() != 0){
+            try{
+                if(output.get("status").toString() == "ok"){
+                    mToken = output.get("token").toString();
+                    mTimeToken = System.currentTimeMillis();
+                }
+                else{
+                    Toast.makeText(this, "Erreur dans la requête: " + output.get("status"), Toast.LENGTH_LONG).show();
+                }
+            }
+            catch(Throwable t){
+                Toast.makeText(this, "WTF, le cancer est dans l'application!!", Toast.LENGTH_LONG).show();
+            }
+        }
+        else{
+            Toast.makeText(this, "Impossible de se connecter au serveur", Toast.LENGTH_LONG).show();
+        }
     }
 }
