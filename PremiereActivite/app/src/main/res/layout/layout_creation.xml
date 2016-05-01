@@ -8,7 +8,7 @@
         android:layout_height="wrap_content"
         android:inputType="numberDecimal"
         android:ems="10"
-        android:id="@+id/editText"
+        android:id="@+id/creation_montant"
         android:layout_gravity="center_horizontal"
         android:editable="true"
         android:elegantTextHeight="true"
@@ -27,16 +27,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/validate"
-        android:id="@+id/button3"
+        android:id="@+id/creation_validation"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="80dp"
         android:elegantTextHeight="true"
         android:enabled="true"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
         android:height="80dp"
         android:minHeight="80dp"
         android:minWidth="150dp"
         android:textAlignment="center"
-        android:width="200dp" />
+        android:width="200dp"
+        android:onClick="valideCreationCompte" />
 </LinearLayout>

@@ -48,8 +48,6 @@
         android:layout_marginTop="40dp"
         android:clickable="true"
         android:enabled="true"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
         android:height="50dp"
         android:hint="@string/validate"
         android:minHeight="40dp"
