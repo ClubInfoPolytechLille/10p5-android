@@ -67,7 +67,7 @@ public class MainActivite extends FragmentActivity implements ASyncResponse {
                 else{
                     viewPager.setCurrentItem(tab.getPosition());    //Empeche un bug graphique
                     viewPager.setCurrentItem(0);
-                    Toast.makeText(MainActivite.this, "Veuillez vous connecter.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivite.this, "Veuillez vous connecter biatche.", Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -83,15 +83,77 @@ public class MainActivite extends FragmentActivity implements ASyncResponse {
         });
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState){
+        savedInstanceState.putString("token", mToken);
+        savedInstanceState.putInt("state", mState);
+        savedInstanceState.putString("user", mUser);
+        savedInstanceState.putInt("droit", mDroit);
+        savedInstanceState.putLong("timeToken", mTimeToken);
+
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        mTimeToken = savedInstanceState.getLong("timeToken");
+        mToken = savedInstanceState.getString("user");
+        mState = savedInstanceState.getInt("state");
+        mUser = savedInstanceState.getString("user");
+        mDroit = savedInstanceState.getInt("droit");
+
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    public void valideCreationCompte(View v){
+        if((mToken != "") && ((System.currentTimeMillis() - mTimeToken) < EXPIRATION)) {
+            EditText champMontant = (EditText) findViewById(R.id.creation_montant);
+            float montant = 0.0f;
+
+            try{
+                montant = Float.parseFloat(champMontant.getText().toString());
+            }
+            catch (Throwable t){
+                Toast.makeText(this, "Remplir le champ montant avec un nombre: " + t.toString(), Toast.LENGTH_LONG).show();
+            }
+
+            if((montant > 0.0f) && (montant < 200.0f) && (mDroit >= 1)){
+                mState = STATE_CREATION_COMPTE;
+                Intent intent = new Intent(this, CarteActivite.class);
+                intent.putExtra("token", mToken);
+                intent.putExtra("state", mState);
+                intent.putExtra("montant", montant);
+                startActivityForResult(intent, mState);
+            }
+            else{
+                Toast.makeText(this, "Valeur incorrecte ou droit insuffisant.", Toast.LENGTH_LONG).show();
+            }
+        }
+        else{
+            Toast.makeText(this, "Veuillez vous reconnecter.", Toast.LENGTH_LONG).show();
+            final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+            viewPager.setCurrentItem(0);
+        }
+    }
+
     public void valideCommande(View v)
     {
         if((mToken != "") && ((System.currentTimeMillis() - mTimeToken) < EXPIRATION)) {
             EditText champMontant = (EditText) findViewById(R.id.commande_prix);
             EditText champQuantite = (EditText) findViewById(R.id.commande_quantite);
-            float montant = Float.parseFloat(champMontant.getText().toString());
-            int quantite = Integer.parseInt(champQuantite.getText().toString());
+            float montant = 0.0f;
+            int quantite = 0;
 
-            if ((montant > 0.0) && (montant < 200.0)) {
+            try{
+                montant = Float.parseFloat(champMontant.getText().toString());
+                quantite = Integer.parseInt(champQuantite.getText().toString());
+            }
+            catch (Throwable t)
+            {
+                Toast.makeText(this, "Remplir les champs avec des nombres: " + t.toString(), Toast.LENGTH_LONG).show();
+            }
+
+            if ((montant > 0.0f) && (montant < 200.0f) && (quantite > 0) && (mDroit >= 1)) {
                 mState = STATE_COMMANDE;
                 Intent intent = new Intent(this, CarteActivite.class);
                 intent.putExtra("token", mToken);
@@ -99,6 +161,9 @@ public class MainActivite extends FragmentActivity implements ASyncResponse {
                 intent.putExtra("montant", montant);
                 intent.putExtra("quantite", quantite);
                 startActivityForResult(intent, mState);
+            }
+            else{
+                Toast.makeText(this, "Valeur incorrecte ou droit insuffisant.", Toast.LENGTH_LONG).show();
             }
         }
         else{
@@ -111,7 +176,27 @@ public class MainActivite extends FragmentActivity implements ASyncResponse {
     public void valideRechargement(View v)
     {
         if((mToken != "") && ((System.currentTimeMillis() - mTimeToken) < EXPIRATION)) {
+            EditText champMontant = (EditText) findViewById(R.id.rechargement_champ_montant);
+            float montant = 0.0f;
 
+            try{
+                montant = Float.parseFloat(champMontant.getText().toString());
+            }
+            catch (Throwable t){
+                Toast.makeText(this, "Remplir le champ montant avec un nombre: " + t.toString(), Toast.LENGTH_LONG).show();
+            }
+
+            if((montant > 0.0f) && (montant < 200.0f) && (mDroit >= 2)){
+                mState = STATE_RECHARGEMENT;
+                Intent intent = new Intent(this, CarteActivite.class);
+                intent.putExtra("token", mToken);
+                intent.putExtra("state", mState);
+                intent.putExtra("montant", montant);
+                startActivityForResult(intent, mState);
+            }
+            else{
+                Toast.makeText(this, "Valeur incorrecte ou droit insuffisant.", Toast.LENGTH_LONG).show();
+            }
         }
         else{
             Toast.makeText(this, "Veuillez vous reconnecter.", Toast.LENGTH_LONG).show();
@@ -127,8 +212,6 @@ public class MainActivite extends FragmentActivity implements ASyncResponse {
 
         String user = viewUser.getText().toString();
         String password = viewPsw.getText().toString();
-
-        System.out.println(user + " " + password);
 
         if ((user != "") && (password != "")) {
             mState = STATE_CONNEXION;
@@ -147,6 +230,9 @@ public class MainActivite extends FragmentActivity implements ASyncResponse {
             catch (Throwable t) {
                 //TODO: gérer les exceptions du cancer de la connexion
             }
+        }
+        else{
+            Toast.makeText(this, "Veuillez remplir les champs.", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -182,6 +268,8 @@ public class MainActivite extends FragmentActivity implements ASyncResponse {
                     mDroit = output.getInt("droit");
                     mUser = output.get("login").toString();
                     Toast.makeText(this, "Bonjour " + mUser + " vous êtes bien connecté pour " + EXPIRATION / (1000 * 60) + " minutes.", Toast.LENGTH_LONG).show();
+                    final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+                    viewPager.setCurrentItem(1);
                 }
                 else{
                     Toast.makeText(this, "Erreur dans la requête: " + output.get("status"), Toast.LENGTH_LONG).show();
