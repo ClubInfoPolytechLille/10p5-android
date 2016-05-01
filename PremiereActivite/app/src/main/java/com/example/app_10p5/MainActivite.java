@@ -9,11 +9,16 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
+import java.net.URL;
+import java.util.HashMap;
+
 
 /**
  * Created by beaus on 24/04/2016.
  */
-public class MainActivite extends FragmentActivity {
+public class MainActivite extends FragmentActivity implements ASyncResponse {
 
     public static final int STATE_RIEN = 0;
     public static final int STATE_COMMANDE = 3;
@@ -117,16 +122,28 @@ public class MainActivite extends FragmentActivity {
         EditText viewUser = (EditText) findViewById(R.id.connection_username);
         EditText viewPsw = (EditText) findViewById(R.id.connection_password);
 
-        String user = viewUser.toString();
-        String password = viewPsw.toString();
+        String user = viewUser.getText().toString();
+        String password = viewPsw.getText().toString();
+
+        System.out.println(user + " " + password);
 
         if ((user != "") && (password != "")) {
             mState = STATE_CONNEXION;
-            Intent intent = new Intent(this, CarteActivite.class);
-            intent.putExtra("user", user);
-            intent.putExtra("state", mState);
-            intent.putExtra("password", password);
-            startActivityForResult(intent, mState);
+
+            try{
+                System.out.println("try");
+                URL url = new URL(CarteActivite.HOST + "api/utilisateur/connexion");
+                System.out.println("url");
+                HashMap<String, String> param = new HashMap<String, String>();
+                param.put("login", user);
+                param.put("mdp", password);
+                NetworkThread nt = new NetworkThread(url, param);
+                nt.delegate = this;
+                nt.execute();
+            }
+            catch (Throwable t) {
+                //TODO: gérer les exceptions du cancer de la connexion
+            }
         }
     }
 
@@ -151,4 +168,9 @@ public class MainActivite extends FragmentActivity {
         }
     }
 
+    /* Retour du network thread */
+    @Override
+    public void processFinish(JSONObject output) {
+        //TODO: Uniquement pour la connexion
+    }
 }
