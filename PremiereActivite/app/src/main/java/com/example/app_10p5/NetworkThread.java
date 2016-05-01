@@ -51,12 +51,24 @@ public class NetworkThread extends AsyncTask<Void, Void, JSONObject> {
 
             httpCo.connect();
 
-            OutputStreamWriter wr = new OutputStreamWriter(httpCo.getOutputStream());
+            boolean debut = true;
+            StringBuilder buffer = new StringBuilder();
+
             for (Map.Entry<String, String> entry : mParam.entrySet()) {
-                String key = entry.getKey();
-                String value = entry.getValue();
-                wr.write(key + "=" + value);
+                if(debut){
+                    debut = false;
+                }
+                else
+                {
+                    buffer.append("&");
+                }
+                buffer.append(entry.getKey());
+                buffer.append("=");
+                buffer.append(entry.getValue());
             }
+
+            OutputStreamWriter wr = new OutputStreamWriter(httpCo.getOutputStream());
+            wr.write(buffer.toString());
             wr.flush();
 
             String response = "";
@@ -68,7 +80,7 @@ public class NetworkThread extends AsyncTask<Void, Void, JSONObject> {
                     response += line;
                 }
             } else {
-                response = "Erreur";
+                response = "{\"status\":" + httpCo.getResponseCode() + "}";
             }
 
             json = new JSONObject(response);
