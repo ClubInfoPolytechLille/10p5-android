@@ -188,6 +188,7 @@ public class CarteActivite extends Activity implements ASyncResponse {
         try {
             URL url = new URL(HOST + mAPI);
             NetworkThread nt = new NetworkThread(url, mParam);
+            nt.delegate = this;
             nt.execute();
         }
         catch (Throwable t){
