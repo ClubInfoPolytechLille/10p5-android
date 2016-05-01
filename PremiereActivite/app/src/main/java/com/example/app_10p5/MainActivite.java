@@ -31,7 +31,9 @@ public class MainActivite extends FragmentActivity implements ASyncResponse {
 
     private int mState;
     private String mToken;
+    private int mDroit;
     private long mTimeToken;
+    private String mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -174,16 +176,19 @@ public class MainActivite extends FragmentActivity implements ASyncResponse {
     public void processFinish(JSONObject output) {
         if(output.length() != 0){
             try{
-                if(output.get("status").toString() == "ok"){
-                    mToken = output.get("token").toString();
+                if(output.get("status").toString().equals("ok")){
+                    mToken = output.get("jeton").toString();
                     mTimeToken = System.currentTimeMillis();
+                    mDroit = output.getInt("droit");
+                    mUser = output.get("login").toString();
+                    Toast.makeText(this, "Bonjour " + mUser + " vous êtes bien connecté pour " + EXPIRATION / (1000 * 60) + " minutes.", Toast.LENGTH_LONG).show();
                 }
                 else{
                     Toast.makeText(this, "Erreur dans la requête: " + output.get("status"), Toast.LENGTH_LONG).show();
                 }
             }
             catch(Throwable t){
-                Toast.makeText(this, "WTF, le cancer est dans l'application!!", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "WTF, le cancer est dans l'application!!" + t.toString(), Toast.LENGTH_LONG).show();
             }
         }
         else{
