@@ -192,7 +192,7 @@ public class CarteActivite extends Activity implements ASyncResponse {
             nt.execute();
         }
         catch (Throwable t){
-            Toast.makeText(this, "WTF, le cancer est dans l'application!!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "WTF, le cancer est dans l'application!! " + t.toString(), Toast.LENGTH_LONG).show();
             finish();
             return;
         }
