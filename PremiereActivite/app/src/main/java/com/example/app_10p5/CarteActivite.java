@@ -31,8 +31,9 @@ public class CarteActivite extends Activity implements ASyncResponse {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_carte);
 
-        switch (getIntent().getIntExtra("state", MainActivite.STATE_RIEN)) {
+        mParam = new HashMap<String, String>();
 
+        switch (getIntent().getIntExtra("state", MainActivite.STATE_RIEN)) {
             case MainActivite.STATE_COMMANDE:
                 mParam.put("quantite", String.valueOf(getIntent().getIntExtra("quantite", -1)));
                 mParam.put("montant", String.valueOf(getIntent().getFloatExtra("montant", -1)));
