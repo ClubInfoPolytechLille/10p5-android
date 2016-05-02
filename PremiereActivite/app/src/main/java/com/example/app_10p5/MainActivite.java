@@ -1,13 +1,18 @@
 package com.example.app_10p5;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.opengl.ETC1;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.ViewPager;
 import android.text.InputFilter;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -20,7 +25,7 @@ import java.util.HashMap;
 /**
  * Created by beaus on 24/04/2016.
  */
-public class MainActivite extends FragmentActivity implements ASyncResponse {
+public class MainActivite extends Activity implements ASyncResponse {
 
     public static final int STATE_RIEN = 0;
     public static final int STATE_COMMANDE = 3;
@@ -41,11 +46,18 @@ public class MainActivite extends FragmentActivity implements ASyncResponse {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_main);
 
+        Window window = this.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(getResources().getColor(R.color.colorPrimary));
+
+        getActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorPrimary)));
+
         mState = STATE_RIEN;
         mTimeToken = -1;
         mToken = "";
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        /*TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         tabLayout.addTab(tabLayout.newTab().setText("Connexion"));
         tabLayout.addTab(tabLayout.newTab().setText("Commande"));
@@ -55,7 +67,7 @@ public class MainActivite extends FragmentActivity implements ASyncResponse {
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+        final PagerAdapter adapter = new PagerAdapter(getFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -80,7 +92,20 @@ public class MainActivite extends FragmentActivity implements ASyncResponse {
             public void onTabReselected(TabLayout.Tab tab) {
 
             }
-        });
+        });*/
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.clear();
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -131,8 +156,8 @@ public class MainActivite extends FragmentActivity implements ASyncResponse {
         }
         else{
             Toast.makeText(this, "Veuillez vous reconnecter.", Toast.LENGTH_LONG).show();
-            final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-            viewPager.setCurrentItem(0);
+            /*final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+            viewPager.setCurrentItem(0);*/
         }
     }
 
@@ -168,8 +193,8 @@ public class MainActivite extends FragmentActivity implements ASyncResponse {
         }
         else{
             Toast.makeText(this, "Veuillez vous reconnecter.", Toast.LENGTH_LONG).show();
-            final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-            viewPager.setCurrentItem(0);
+            /*final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+            viewPager.setCurrentItem(0);*/
         }
     }
 
@@ -200,8 +225,8 @@ public class MainActivite extends FragmentActivity implements ASyncResponse {
         }
         else{
             Toast.makeText(this, "Veuillez vous reconnecter.", Toast.LENGTH_LONG).show();
-            final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-            viewPager.setCurrentItem(0);
+            /*final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+            viewPager.setCurrentItem(0);*/
         }
     }
 
@@ -250,8 +275,8 @@ public class MainActivite extends FragmentActivity implements ASyncResponse {
         }
         else{
             Toast.makeText(this, "Veuillez vous reconnecter.", Toast.LENGTH_LONG).show();
-            final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-            viewPager.setCurrentItem(0);
+            /*final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+            viewPager.setCurrentItem(0);*/
         }
     }
 
@@ -265,7 +290,7 @@ public class MainActivite extends FragmentActivity implements ASyncResponse {
 
         }
         catch (Throwable t){
-            Toast.makeText(this, "WTF, le cancer est dans l'application!!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Retour", Toast.LENGTH_SHORT).show();
         }
 
 
@@ -297,11 +322,11 @@ public class MainActivite extends FragmentActivity implements ASyncResponse {
                     mTimeToken = System.currentTimeMillis();
                     mDroit = output.getInt("droit");
                     mUser = output.get("login").toString();
-                    Toast.makeText(this, "Bonjour " + mUser + " vous êtes bien connecté pour " + EXPIRATION / (1000 * 60) + " minutes.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Bonjour " + mUser + " vous êtes bien connecté pour " + EXPIRATION / (1000 * 60) + " minutes.", Toast.LENGTH_SHORT).show();
                     EditText coUser = (EditText) findViewById(R.id.connection_password);
                     coUser.setText("");
-                    final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-                    viewPager.setCurrentItem(1);
+                    /*final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+                    viewPager.setCurrentItem(1);*/
                 }
                 else{
                     Toast.makeText(this, "Erreur dans la requête: " + output.get("status"), Toast.LENGTH_LONG).show();
@@ -312,7 +337,7 @@ public class MainActivite extends FragmentActivity implements ASyncResponse {
             }
         }
         else{
-            Toast.makeText(this, "Impossible de se connecter au serveur", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Impossible de se connecter au serveur", Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Polytech 10p5</string>
+    <string name="app_name">Polytech_10p5</string>
     <string name="action_settings">Options</string>
     <string name="user">Identifiant</string>
     <string name="password">Mot de passe</string>

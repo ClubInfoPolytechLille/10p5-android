@@ -3,19 +3,20 @@ package com.example.app_10p5;
 /**
  * Created by beaus on 24/04/2016.
  */
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 
-public class PagerAdapter extends FragmentStatePagerAdapter {
+import android.app.Fragment;
+import android.app.FragmentManager;
+
+
+public class PagerAdapter /*extends ViewPager*/ {
     int mNumOfTabs;
 
     public PagerAdapter(FragmentManager fm, int NumOfTabs) {
-        super(fm);
+        //super(fm);
         this.mNumOfTabs = NumOfTabs;
     }
 
-    @Override
+    //@Override
     public Fragment getItem(int position) {
 
         switch (position) {
@@ -39,7 +40,7 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
         }
     }
 
-    @Override
+    //@Override
     public int getCount() {
         return mNumOfTabs;
     }
