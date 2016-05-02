@@ -51,7 +51,7 @@ public class CarteActivite extends Activity implements ASyncResponse {
                 mAPI = "api/client/recharger";
                 break;
             case MainActivite.STATE_VIDANGE:
-                //pas de paramètre
+                mParam.put("jeton", getIntent().getStringExtra("token"));
                 mAPI = "api/client/vidange";
                 break;
             case MainActivite.STATE_CONNEXION:  //Impossible c'est pas géré ici

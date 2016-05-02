@@ -1,10 +1,12 @@
 package com.example.app_10p5;
 
 import android.content.Intent;
+import android.opengl.ETC1;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.text.InputFilter;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -229,6 +231,27 @@ public class MainActivite extends FragmentActivity implements ASyncResponse {
         }
         else{
             Toast.makeText(this, "Veuillez remplir les champs.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void valideVidange(View v){
+        if((mToken != "") && ((System.currentTimeMillis() - mTimeToken) < EXPIRATION)) {
+
+            if((mDroit >= 2)){
+                mState = STATE_VIDANGE;
+                Intent intent = new Intent(this, CarteActivite.class);
+                intent.putExtra("token", mToken);
+                intent.putExtra("state", mState);
+                startActivityForResult(intent, mState);
+            }
+            else{
+                Toast.makeText(this, "Droit insuffisant.", Toast.LENGTH_LONG).show();
+            }
+        }
+        else{
+            Toast.makeText(this, "Veuillez vous reconnecter.", Toast.LENGTH_LONG).show();
+            final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+            viewPager.setCurrentItem(0);
         }
     }
 
