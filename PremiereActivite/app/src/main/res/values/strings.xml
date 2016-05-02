@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">PremiereActivite</string>
-    <string name="action_settings">Settings</string>
+    <string name="app_name">Polytech 10p5</string>
+    <string name="action_settings">Options</string>
     <string name="user">Identifiant</string>
     <string name="password">Mot de passe</string>
     <string name="validate">Valider</string>
