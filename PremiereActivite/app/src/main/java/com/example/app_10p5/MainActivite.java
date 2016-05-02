@@ -2,7 +2,6 @@ package com.example.app_10p5;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -54,8 +53,7 @@ public class MainActivite extends FragmentActivity implements ASyncResponse {
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        final PagerAdapter adapter = new PagerAdapter
-                (getSupportFragmentManager(), tabLayout.getTabCount());
+        final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -67,7 +65,7 @@ public class MainActivite extends FragmentActivity implements ASyncResponse {
                 else{
                     viewPager.setCurrentItem(tab.getPosition());    //Empeche un bug graphique
                     viewPager.setCurrentItem(0);
-                    Toast.makeText(MainActivite.this, "Veuillez vous connecter biatche.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivite.this, "Veuillez vous connecter.", Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -266,6 +264,8 @@ public class MainActivite extends FragmentActivity implements ASyncResponse {
                     mDroit = output.getInt("droit");
                     mUser = output.get("login").toString();
                     Toast.makeText(this, "Bonjour " + mUser + " vous êtes bien connecté pour " + EXPIRATION / (1000 * 60) + " minutes.", Toast.LENGTH_LONG).show();
+                    EditText coUser = (EditText) findViewById(R.id.connection_password);
+                    coUser.setText("");
                     final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
                     viewPager.setCurrentItem(1);
                 }
