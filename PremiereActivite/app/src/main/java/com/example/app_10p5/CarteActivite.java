@@ -35,24 +35,27 @@ public class CarteActivite extends Activity implements ASyncResponse {
 
         switch (getIntent().getIntExtra("state", MainActivite.STATE_RIEN)) {
             case MainActivite.STATE_COMMANDE:
-                mParam.put("quantite", String.valueOf(getIntent().getIntExtra("quantite", -1)));
+                //TODO: XOR du cancer
+                //mParam.put("quantite", String.valueOf(getIntent().getIntExtra("quantite", -1)));
                 mParam.put("montant", String.valueOf(getIntent().getFloatExtra("montant", -1)));
-                mParam.put("token", getIntent().getStringExtra("token"));
+                mParam.put("jeton", getIntent().getStringExtra("token"));
                 mAPI = "api/client/payer";
                 break;
             case MainActivite.STATE_CREATION_COMPTE:
-                //TODO: param
+                mParam.put("solde", String.valueOf(getIntent().getFloatExtra("montant", -1)));
+                mParam.put("jeton", getIntent().getStringExtra("token"));
                 mAPI = "api/client/ajouter";
                 break;
             case MainActivite.STATE_RECHARGEMENT:
-                //TODO: param
+                mParam.put("montant", String.valueOf(getIntent().getFloatExtra("montant", -1)));
+                mParam.put("jeton", getIntent().getStringExtra("token"));
                 mAPI = "api/client/recharger";
                 break;
             case MainActivite.STATE_VIDANGE:
-                //TODO: param
+                //pas de paramètre
                 mAPI = "api/client/vidange";
                 break;
-            case MainActivite.STATE_CONNEXION:
+            case MainActivite.STATE_CONNEXION:  //Impossible c'est pas géré ici
             case MainActivite.STATE_RIEN:
             default:
                 Toast.makeText(this, "WTF, le cancer est dans l'application!!", Toast.LENGTH_LONG).show();
@@ -107,11 +110,8 @@ public class CarteActivite extends Activity implements ASyncResponse {
 
     private void handleIntent(Intent intent){
         if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
-            Toast toast;
             String id_carte = ByteArrayToHexString(intent.getByteArrayExtra(NfcAdapter.EXTRA_ID));
-            mParam.put("ID", id_carte);
-            toast = Toast.makeText(getApplicationContext(), "ID Carte : " + id_carte, Toast.LENGTH_SHORT);
-            toast.show();
+            mParam.put("idCarte", id_carte);
 
             //Lecture des données
             Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
@@ -145,16 +145,13 @@ public class CarteActivite extends Activity implements ASyncResponse {
                                 prenom = dataStr;
                             else if (i == 3) //Nom
                                 nom = dataStr;
-                            toast = Toast.makeText(getApplicationContext(), "Données lues : " + dataStr, Toast.LENGTH_SHORT);
-                            toast.show();
                         }
                     } else {
-                        toast = Toast.makeText(getApplicationContext(), "Erreur lors de la connection au secteur 12.", Toast.LENGTH_SHORT);
-                        toast.show();
+                        Toast.makeText(this, "Impossible de lire le secteur 12", Toast.LENGTH_LONG).show();
                     }
                     mfc.close();
-                } catch (IOException e) {
-                    System.out.println(e.getLocalizedMessage());
+                } catch (Throwable t) {
+                    Toast.makeText(this, "WTF, le cancer est dans l'application!! " + t.toString(), Toast.LENGTH_LONG).show();
                 }
 
                 //Concaténation des données récupérées en login
@@ -162,12 +159,8 @@ public class CarteActivite extends Activity implements ASyncResponse {
                 login.concat(".");
                 login.concat(nom);
             } else {
-                toast = Toast.makeText(getApplicationContext(), "Pas de connection possible à la technologie Mifare Classic.", Toast.LENGTH_SHORT);
-                toast.show();
+                Toast.makeText(this, "Pas de Mifare Classic", Toast.LENGTH_SHORT).show();
             }
-
-            toast = Toast.makeText(getApplicationContext(), "Login Lille 1 : " + login, Toast.LENGTH_SHORT);
-            toast.show();
 
             //Éxécution de la fonction
             clientAPI();
@@ -203,6 +196,17 @@ public class CarteActivite extends Activity implements ASyncResponse {
     /* Retour du NetworkThread */
     @Override
     public void processFinish(JSONObject output) {
-        //TODO: faire un retour vers l'activity parente des données reçues.
+        try {
+            if (output.get("status").equals("ok")) {
+                Toast.makeText(this, "Tout c'est bien passé: " + output.get("status").toString(), Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Erreur lors du traitement de la requête: " + output.get("status").toString(), Toast.LENGTH_LONG).show();
+            }
+        } catch (Throwable t) {
+            Toast.makeText(this, "WTF, le cancer est dans l'application!! " + t.toString(), Toast.LENGTH_LONG).show();
+        }
+
+        finish();
+        return;
     }
 }
