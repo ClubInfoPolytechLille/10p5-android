@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:ems="10"
+        android:id="@+id/creation_montant"
+        android:layout_gravity="center_horizontal"
+        android:editable="true"
+        android:elegantTextHeight="true"
+        android:enabled="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:minHeight="80dp"
+        android:minWidth="200dp"
+        android:numeric="decimal"
+        android:width="250dp"
+        android:layout_marginTop="80dp"
+        android:hint="@string/montant"
+        android:textAlignment="center" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/validate"
+        android:id="@+id/creation_validation"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="80dp"
+        android:elegantTextHeight="true"
+        android:enabled="true"
+        android:height="80dp"
+        android:minHeight="80dp"
+        android:minWidth="150dp"
+        android:textAlignment="center"
+        android:width="200dp"
+        android:onClick="valideCreationCompte" />
+</LinearLayout>

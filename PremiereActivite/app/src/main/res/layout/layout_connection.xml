@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/connection_username"
+        android:layout_gravity="center_horizontal"
+        android:editable="true"
+        android:enabled="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:inputType="text"
+        android:minHeight="80dp"
+        android:minWidth="250dp"
+        android:width="250dp"
+        android:hint="@string/user"
+        android:height="80dp"
+        android:textAlignment="center" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/connection_password"
+        android:layout_gravity="center_horizontal"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        android:editable="true"
+        android:enabled="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:height="80dp"
+        android:minHeight="80dp"
+        android:minWidth="250dp"
+        android:password="true"
+        android:width="250dp"
+        android:layout_marginTop="40dp"
+        android:textAlignment="center" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/validate"
+        android:id="@+id/connection_button"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="40dp"
+        android:clickable="true"
+        android:enabled="true"
+        android:height="50dp"
+        android:hint="@string/validate"
+        android:minHeight="40dp"
+        android:minWidth="150dp"
+        android:onClick="valideConnection"
+        android:textAlignment="center"
+        android:width="150dp" />
+</LinearLayout>
