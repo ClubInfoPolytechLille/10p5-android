@@ -1,12 +1,10 @@
 package com.example.app_10p5;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.opengl.ETC1;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.text.InputFilter;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -20,7 +18,7 @@ import java.util.HashMap;
 /**
  * Created by beaus on 24/04/2016.
  */
-public class MainActivite extends FragmentActivity implements ASyncResponse {
+public class MainActivite extends Activity implements ASyncResponse {
 
     public static final int STATE_RIEN = 0;
     public static final int STATE_COMMANDE = 3;
@@ -55,7 +53,7 @@ public class MainActivite extends FragmentActivity implements ASyncResponse {
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+        final PagerAdapter adapter = new PagerAdapter(getFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
