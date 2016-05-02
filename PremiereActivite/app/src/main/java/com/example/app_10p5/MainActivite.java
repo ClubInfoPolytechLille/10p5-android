@@ -258,6 +258,17 @@ public class MainActivite extends FragmentActivity implements ASyncResponse {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         //TODO: faire des choses avec ca
+
+        try{
+            JSONObject json = new JSONObject(data.getStringExtra("json"));
+            Toast.makeText(this, "Status: " + json.getString("status"), Toast.LENGTH_SHORT).show();
+
+        }
+        catch (Throwable t){
+            Toast.makeText(this, "WTF, le cancer est dans l'application!!", Toast.LENGTH_LONG).show();
+        }
+
+
         switch (requestCode) {
             case STATE_COMMANDE:
                 break;

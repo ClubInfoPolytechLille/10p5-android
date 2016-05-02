@@ -195,17 +195,9 @@ public class CarteActivite extends Activity implements ASyncResponse {
     /* Retour du NetworkThread */
     @Override
     public void processFinish(JSONObject output) {
-        try {
-            if (output.get("status").equals("ok")) {
-                Toast.makeText(this, "Tout c'est bien passé: " + output.get("status").toString(), Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(this, "Erreur lors du traitement de la requête: " + output.get("status").toString(), Toast.LENGTH_LONG).show();
-            }
-        } catch (Throwable t) {
-            Toast.makeText(this, "WTF, le cancer est dans l'application!! " + t.toString(), Toast.LENGTH_LONG).show();
-        }
-
+        Intent intent = new Intent(this, CarteActivite.class);
+        intent.putExtra("json", output.toString());
+        setResult(0, intent);
         finish();
-        return;
     }
 }
