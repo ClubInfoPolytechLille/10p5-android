@@ -217,9 +217,7 @@ public class MainActivite extends FragmentActivity implements ASyncResponse {
             mState = STATE_CONNEXION;
 
             try{
-                System.out.println("try");
                 URL url = new URL(CarteActivite.HOST + "api/utilisateur/connexion");
-                System.out.println("url");
                 HashMap<String, String> param = new HashMap<String, String>();
                 param.put("login", user);
                 param.put("mdp", password);
