@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 
@@ -151,7 +150,7 @@ public class CarteActivite extends Activity implements ASyncResponse {
                     }
                     mfc.close();
                 } catch (Throwable t) {
-                    Toast.makeText(this, "WTF, le cancer est dans l'application!! " + t.toString(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "WTF, le cancer est dans l'application!! Autodéstruction dans 5 secondes !!!!!!!!!" + t.toString(), Toast.LENGTH_LONG).show();
                 }
 
                 //Concaténation des données récupérées en login
