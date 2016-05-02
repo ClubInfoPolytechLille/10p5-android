@@ -85,11 +85,9 @@ public class NetworkThread extends AsyncTask<Void, Void, JSONObject> {
 
             json = new JSONObject(response);
 
-            System.out.println(json.getString("status"));
-
             httpCo.disconnect();
-        } catch (Throwable e) {
-            System.out.println(e.toString());
+        } catch (Throwable t) {
+            System.out.println(t.toString());
         }
 
         return json;
