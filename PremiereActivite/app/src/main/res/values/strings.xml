@@ -9,5 +9,7 @@
     <string name="prix">Prix</string>
     <string name="vidange">Vidange</string>
     <string name="passCarte">Passez la carte du client</string>
+    <string name="disconnect">Déconnexion</string>
+    <string name="connect">Connexion</string>
 
 </resources>
