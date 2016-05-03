@@ -1,6 +1,8 @@
 package com.example.app_10p5;
 
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -22,7 +24,7 @@ import java.util.HashMap;
 /**
  * Created by beaus on 24/04/2016.
  */
-public class MainActivite extends Activity implements ASyncResponse {
+public class MainActivite extends Activity implements ASyncResponse, main_tab_frag.OnFragmentInteractionListener {
 
     public static final int STATE_RIEN = 0;
     public static final int STATE_COMMANDE = 3;
@@ -49,42 +51,11 @@ public class MainActivite extends Activity implements ASyncResponse {
 
         getActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorPrimary)));
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-        tabLayout.addTab(tabLayout.newTab().setText("Connexion"));
-        tabLayout.addTab(tabLayout.newTab().setText("Commande"));
-        tabLayout.addTab(tabLayout.newTab().setText("Rechargement"));
-        tabLayout.addTab(tabLayout.newTab().setText("Création"));
-        tabLayout.addTab(tabLayout.newTab().setText("Vidange"));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        final PagerAdapter adapter = new PagerAdapter(getFragmentManager(), tabLayout.getTabCount());
-        viewPager.setAdapter(adapter);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                if(mToken != "" && System.currentTimeMillis() - mTimeToken < EXPIRATION){
-                    viewPager.setCurrentItem(tab.getPosition());
-                }
-                else{
-                    viewPager.setCurrentItem(tab.getPosition());    //Empeche un bug graphique
-                    viewPager.setCurrentItem(0);
-                    Toast.makeText(MainActivite.this, "Veuillez vous connecter.", Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        main_tab_frag fragment = new main_tab_frag();
+        fragmentTransaction.add(R.id.fragment_container, fragment);
+        fragmentTransaction.commit();
     }
 
     @Override
@@ -98,6 +69,11 @@ public class MainActivite extends Activity implements ASyncResponse {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
                 return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onFragmentInteraction(String s){
+
     }
 
     @Override
@@ -148,8 +124,8 @@ public class MainActivite extends Activity implements ASyncResponse {
         }
         else{
             Toast.makeText(this, "Veuillez vous reconnecter.", Toast.LENGTH_LONG).show();
-            final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-            viewPager.setCurrentItem(0);
+            /*final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+            viewPager.setCurrentItem(0);*/
         }
     }
 
@@ -185,8 +161,8 @@ public class MainActivite extends Activity implements ASyncResponse {
         }
         else{
             Toast.makeText(this, "Veuillez vous reconnecter.", Toast.LENGTH_LONG).show();
-            final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-            viewPager.setCurrentItem(0);
+            /*final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+            viewPager.setCurrentItem(0);*/
         }
     }
 
@@ -217,8 +193,8 @@ public class MainActivite extends Activity implements ASyncResponse {
         }
         else{
             Toast.makeText(this, "Veuillez vous reconnecter.", Toast.LENGTH_LONG).show();
-            final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-            viewPager.setCurrentItem(0);
+            /*final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+            viewPager.setCurrentItem(0);*/
         }
     }
 
@@ -267,8 +243,8 @@ public class MainActivite extends Activity implements ASyncResponse {
         }
         else{
             Toast.makeText(this, "Veuillez vous reconnecter.", Toast.LENGTH_LONG).show();
-            final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-            viewPager.setCurrentItem(0);
+            /*final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+            viewPager.setCurrentItem(0);*/
         }
     }
 
@@ -317,8 +293,8 @@ public class MainActivite extends Activity implements ASyncResponse {
                     Toast.makeText(this, "Bonjour " + mUser + " vous êtes bien connecté pour " + EXPIRATION / (1000 * 60) + " minutes.", Toast.LENGTH_LONG).show();
                     EditText coUser = (EditText) findViewById(R.id.connection_password);
                     coUser.setText("");
-                    final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-                    viewPager.setCurrentItem(1);
+                    /*final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+                    viewPager.setCurrentItem(1);*/
                 }
                 else{
                     Toast.makeText(this, "Erreur dans la requête: " + output.get("status"), Toast.LENGTH_LONG).show();
@@ -331,5 +307,13 @@ public class MainActivite extends Activity implements ASyncResponse {
         else{
             Toast.makeText(this, "Impossible de se connecter au serveur", Toast.LENGTH_LONG).show();
         }
+    }
+
+    public String getToken(){
+        return mToken;
+    }
+
+    public long getTimeToken(){
+        return mTimeToken;
     }
 }

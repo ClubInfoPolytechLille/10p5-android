@@ -46,6 +46,7 @@ public class CarteActivite extends Activity implements ASyncResponse {
                 mAPI = "api/client/ajouter";
                 break;
             case MainActivite.STATE_RECHARGEMENT:
+                System.out.println("bite");
                 mParam.put("montant", String.valueOf(getIntent().getFloatExtra("montant", -1)));
                 mParam.put("jeton", getIntent().getStringExtra("token"));
                 mAPI = "api/client/recharger";
@@ -179,6 +180,7 @@ public class CarteActivite extends Activity implements ASyncResponse {
 
     public void clientAPI() {
         try {
+            System.out.println("chatte");
             URL url = new URL(HOST + mAPI);
             NetworkThread nt = new NetworkThread(url, mParam);
             nt.delegate = this;
