@@ -49,6 +49,9 @@ public class NetworkThread extends AsyncTask<Void, Void, JSONObject> {
             HttpURLConnection httpCo = (HttpURLConnection) mUrl.openConnection();
             httpCo.setDoOutput(true);
 
+            httpCo.setConnectTimeout(20000);
+            httpCo.setReadTimeout(20000);
+
             httpCo.connect();
 
             boolean debut = true;
@@ -87,7 +90,7 @@ public class NetworkThread extends AsyncTask<Void, Void, JSONObject> {
 
             httpCo.disconnect();
         } catch (Throwable t) {
-            System.out.println(t.toString());
+            System.out.println("Exception: " + t.toString());
         }
 
         return json;
