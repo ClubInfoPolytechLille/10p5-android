@@ -3,16 +3,25 @@ package com.example.app_10p5;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.PopupMenu;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -51,11 +60,20 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
 
         getActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorPrimary)));
 
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        main_tab_frag fragment = new main_tab_frag();
-        fragmentTransaction.add(R.id.fragment_container, fragment);
-        fragmentTransaction.commit();
+        if(savedInstanceState == null){
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            main_tab_frag fragment = new main_tab_frag();
+            fragmentTransaction.add(R.id.fragment_container, fragment);
+            fragmentTransaction.commit();
+        }
+        else{
+            mTimeToken = savedInstanceState.getLong("timeToken");
+            mToken = savedInstanceState.getString("token");
+            mState = savedInstanceState.getInt("state");
+            mUser = savedInstanceState.getString("user");
+            mDroit = savedInstanceState.getInt("droit");
+        }
     }
 
     @Override
@@ -68,7 +86,16 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
-                return super.onOptionsItemSelected(item);
+       if(item.getItemId() == R.id.menu_2_choice_1){
+           CarteActivite.HOST = "https://10p5.clubinfo.frogeye.fr/";
+           item.setChecked(true);
+       }
+        else if(item.getItemId() == R.id.menu_2_choice_2){
+           CarteActivite.HOST = "http://pcbar.insecure.deule.net/";
+           item.setChecked(true);
+       }
+
+       return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -85,17 +112,6 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
         savedInstanceState.putLong("timeToken", mTimeToken);
 
         super.onSaveInstanceState(savedInstanceState);
-    }
-
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        mTimeToken = savedInstanceState.getLong("timeToken");
-        mToken = savedInstanceState.getString("user");
-        mState = savedInstanceState.getInt("state");
-        mUser = savedInstanceState.getString("user");
-        mDroit = savedInstanceState.getInt("droit");
-
-        super.onRestoreInstanceState(savedInstanceState);
     }
 
     public void valideCreationCompte(View v){
@@ -124,8 +140,8 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
         }
         else{
             Toast.makeText(this, "Veuillez vous reconnecter.", Toast.LENGTH_LONG).show();
-            /*final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-            viewPager.setCurrentItem(0);*/
+            final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+            viewPager.setCurrentItem(0);
         }
     }
 
@@ -161,8 +177,8 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
         }
         else{
             Toast.makeText(this, "Veuillez vous reconnecter.", Toast.LENGTH_LONG).show();
-            /*final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-            viewPager.setCurrentItem(0);*/
+            final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+            viewPager.setCurrentItem(0);
         }
     }
 
@@ -193,8 +209,8 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
         }
         else{
             Toast.makeText(this, "Veuillez vous reconnecter.", Toast.LENGTH_LONG).show();
-            /*final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-            viewPager.setCurrentItem(0);*/
+            final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+            viewPager.setCurrentItem(0);
         }
     }
 
@@ -219,7 +235,7 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
                 nt.execute();
             }
             catch (Throwable t) {
-                //TODO: gérer les exceptions du cancer de la connexion
+                System.out.println("Exception: " + t.toString());
             }
         }
         else{
@@ -243,8 +259,8 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
         }
         else{
             Toast.makeText(this, "Veuillez vous reconnecter.", Toast.LENGTH_LONG).show();
-            /*final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-            viewPager.setCurrentItem(0);*/
+            final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+            viewPager.setCurrentItem(0);
         }
     }
 
@@ -258,7 +274,7 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
 
         }
         catch (Throwable t){
-            Toast.makeText(this, "WTF, le cancer est dans l'application!!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Retour", Toast.LENGTH_SHORT).show();
         }
 
 
@@ -293,8 +309,8 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
                     Toast.makeText(this, "Bonjour " + mUser + " vous êtes bien connecté pour " + EXPIRATION / (1000 * 60) + " minutes.", Toast.LENGTH_LONG).show();
                     EditText coUser = (EditText) findViewById(R.id.connection_password);
                     coUser.setText("");
-                    /*final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-                    viewPager.setCurrentItem(1);*/
+                    final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+                    viewPager.setCurrentItem(1);
                 }
                 else{
                     Toast.makeText(this, "Erreur dans la requête: " + output.get("status"), Toast.LENGTH_LONG).show();
@@ -315,5 +331,12 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
 
     public long getTimeToken(){
         return mTimeToken;
+    }
+
+    public void settingsPopup(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.popup_settings, popup.getMenu());
+        popup.show();
     }
 }

@@ -3,6 +3,7 @@ package com.example.app_10p5;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.MifareClassic;
@@ -23,12 +24,13 @@ public class CarteActivite extends Activity implements ASyncResponse {
     private HashMap<String, String> mParam;
     private String mAPI;
 
-    public static final String HOST = "https://10p5.clubinfo.frogeye.fr/";
+    public static String HOST = "https://10p5.clubinfo.frogeye.fr/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_carte);
+        getActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorPrimary)));
 
         mParam = new HashMap<String, String>();
 
@@ -180,7 +182,6 @@ public class CarteActivite extends Activity implements ASyncResponse {
 
     public void clientAPI() {
         try {
-            System.out.println("chatte");
             URL url = new URL(HOST + mAPI);
             NetworkThread nt = new NetworkThread(url, mParam);
             nt.delegate = this;

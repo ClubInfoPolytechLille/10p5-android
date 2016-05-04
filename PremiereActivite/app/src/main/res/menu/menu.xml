@@ -19,6 +19,13 @@
         android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:showAsAction="never"
-        app:showAsAction="never" />
+        app:showAsAction="never"><menu>
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/menu_2_choice_1" android:title="Geoffrey"  android:showAsAction="never" android:checked="true" />
+        <item android:id="@+id/menu_2_choice_2" android:title="Bar"  android:showAsAction="never" />
+    </group>
+</menu>
+    </item>
+
 
 </menu>
