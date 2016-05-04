@@ -128,6 +128,8 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
 
             if((montant > 0.0f) && (montant < 200.0f) && (mDroit >= 1)){
                 mState = STATE_CREATION_COMPTE;
+                champMontant.setText("");
+
                 Intent intent = new Intent(this, CarteActivite.class);
                 intent.putExtra("token", mToken);
                 intent.putExtra("state", mState);
@@ -164,6 +166,9 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
 
             if ((montant > 0.0f) && (montant < 200.0f) && (quantite > 0) && (mDroit >= 1)) {
                 mState = STATE_COMMANDE;
+                champMontant.setText("");
+                champQuantite.setText("");
+
                 Intent intent = new Intent(this, CarteActivite.class);
                 intent.putExtra("token", mToken);
                 intent.putExtra("state", mState);
@@ -197,6 +202,8 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
 
             if((montant > 0.0f) && (montant < 200.0f) && (mDroit >= 2)){
                 mState = STATE_RECHARGEMENT;
+                champMontant.setText("");
+
                 Intent intent = new Intent(this, CarteActivite.class);
                 intent.putExtra("token", mToken);
                 intent.putExtra("state", mState);
@@ -224,6 +231,9 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
 
         if ((user != "") && (password != "")) {
             mState = STATE_CONNEXION;
+
+            viewUser.setText("");
+            viewPsw.setText("");
 
             try{
                 URL url = new URL(CarteActivite.HOST + "api/utilisateur/connexion");
@@ -268,6 +278,8 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         //TODO: faire des choses avec ca
 
+        mState = STATE_RIEN;
+
         try{
             JSONObject json = new JSONObject(data.getStringExtra("json"));
             Toast.makeText(this, "Status: " + json.getString("status"), Toast.LENGTH_SHORT).show();
@@ -307,8 +319,6 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
                     mDroit = output.getInt("droit");
                     mUser = output.get("login").toString();
                     Toast.makeText(this, "Bonjour " + mUser + " vous êtes bien connecté pour " + EXPIRATION / (1000 * 60) + " minutes.", Toast.LENGTH_LONG).show();
-                    EditText coUser = (EditText) findViewById(R.id.connection_password);
-                    coUser.setText("");
                     final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
                     viewPager.setCurrentItem(1);
                 }
@@ -331,12 +341,5 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
 
     public long getTimeToken(){
         return mTimeToken;
-    }
-
-    public void settingsPopup(View v) {
-        PopupMenu popup = new PopupMenu(this, v);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.popup_settings, popup.getMenu());
-        popup.show();
     }
 }
