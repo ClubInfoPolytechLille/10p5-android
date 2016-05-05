@@ -32,7 +32,6 @@ public class main_tab_frag extends Fragment {
 
         TabLayout tabLayout = (TabLayout) ret.findViewById(R.id.tab_layout);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-        tabLayout.addTab(tabLayout.newTab().setText("Connexion"));
         tabLayout.addTab(tabLayout.newTab().setText("Commande"));
         tabLayout.addTab(tabLayout.newTab().setText("Rechargement"));
         tabLayout.addTab(tabLayout.newTab().setText("Création"));

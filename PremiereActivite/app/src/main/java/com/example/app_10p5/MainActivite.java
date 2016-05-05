@@ -1,30 +1,24 @@
 package com.example.app_10p5;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Context;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.PopupMenu;
-import android.widget.PopupWindow;
+import android.widget.EditText;;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -54,6 +48,8 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
     private long mTimeToken;
     private String mUser;
 
+    private NfcAdapter mNfcAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -67,11 +63,12 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
         mToken = null;
 
         getActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorPrimary)));
+        mNfcAdapter = NfcAdapter.getDefaultAdapter(getApplicationContext());
 
         if(savedInstanceState == null){
             FragmentManager fragmentManager = getFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            main_tab_frag fragment = new main_tab_frag();
+            ConnectionFragment fragment = new ConnectionFragment();
             fragmentTransaction.add(R.id.fragment_container, fragment);
             fragmentTransaction.commit();
         }
@@ -120,6 +117,39 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
         super.onSaveInstanceState(savedInstanceState);
     }
 
+    @Override
+    public void onPause() {
+        stopForegroundDispatch(this, mNfcAdapter);
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setupForegroundDispatch(this, mNfcAdapter);
+    }
+
+    public static void setupForegroundDispatch(final Activity activity, NfcAdapter adapter){
+        if(adapter != null){
+            final Intent intent = new Intent(activity.getApplicationContext(), activity.getClass());
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            final PendingIntent pendingIntent = PendingIntent.getActivity(activity.getApplicationContext(), 0, intent, 0);
+            adapter.enableForegroundDispatch(activity, pendingIntent, null, null);
+        }
+        else{
+            Toast.makeText(activity, "Impossible d'initialiser le NFC", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public static void stopForegroundDispatch(final Activity activity, NfcAdapter adapter) {
+        if(adapter != null){
+            adapter.disableForegroundDispatch(activity);
+        }
+        else{
+            Toast.makeText(activity, "Impossible d'initialiser le NFC", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     public void valideCreationCompte(View v){
         if((TextUtils.getTrimmedLength(mToken) == 30) && ((System.currentTimeMillis() - mTimeToken) < EXPIRATION)) {
             EditText champMontant = (EditText) findViewById(R.id.creation_montant);
@@ -138,11 +168,16 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
                         mState = STATE_CREATION_COMPTE;
                         champMontant.setText(null);
 
-                        Intent intent = new Intent(this, CarteActivite.class);
-                        intent.putExtra("token", mToken);
-                        intent.putExtra("state", mState);
-                        intent.putExtra("montant", montant);
-                        startActivityForResult(intent, mState);
+                        Bundle b = new Bundle();
+                        b.putString("token", mToken);
+                        b.putInt("state", mState);
+                        b.putFloat("montant", montant);
+
+
+                        NFCFragment nfc = new NFCFragment();
+                        nfc.setArguments(b);
+
+                        getFragmentManager().beginTransaction().replace(R.id.fragment_container, nfc).addToBackStack(null).commit();
                     }
                     else{
                         Toast.makeText(this, "Valeur incorrecte.", Toast.LENGTH_LONG).show();
@@ -185,12 +220,16 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
                 champMontant.setText(null);
                 champQuantite.setText(null);
 
-                Intent intent = new Intent(this, CarteActivite.class);
-                intent.putExtra("token", mToken);
-                intent.putExtra("state", mState);
-                intent.putExtra("montant", montant);
-                intent.putExtra("quantite", quantite);
-                startActivityForResult(intent, mState);
+                Bundle b = new Bundle();
+                b.putString("token", mToken);
+                b.putInt("state", mState);
+                b.putFloat("montant", montant);
+                b.putInt("quantite", quantite);
+
+                NFCFragment nfc = new NFCFragment();
+                nfc.setArguments(b);
+
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, nfc).addToBackStack(null).commit();
             }
             else{
                 Toast.makeText(this, "Valeur incorrecte ou droit insuffisant.", Toast.LENGTH_LONG).show();
@@ -221,11 +260,15 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
                         mState = STATE_RECHARGEMENT;
                         champMontant.setText(null);
 
-                        Intent intent = new Intent(this, CarteActivite.class);
-                        intent.putExtra("token", mToken);
-                        intent.putExtra("state", mState);
-                        intent.putExtra("montant", montant);
-                        startActivityForResult(intent, mState);
+                        Bundle b = new Bundle();
+                        b.putString("token", mToken);
+                        b.putInt("state", mState);
+                        b.putFloat("montant", montant);
+
+                        NFCFragment nfc = new NFCFragment();
+                        nfc.setArguments(b);
+
+                        getFragmentManager().beginTransaction().replace(R.id.fragment_container, nfc).addToBackStack(null).commit();
                     }
                     else{
                         Toast.makeText(this, "Valeur incorrecte.", Toast.LENGTH_LONG).show();
@@ -288,10 +331,14 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
 
             if((mDroit >= 2)){
                 mState = STATE_VIDANGE;
-                Intent intent = new Intent(this, CarteActivite.class);
-                intent.putExtra("token", mToken);
-                intent.putExtra("state", mState);
-                startActivityForResult(intent, mState);
+                Bundle b = new Bundle();
+                b.putString("token", mToken);
+                b.putInt("state", mState);
+
+                NFCFragment nfc = new NFCFragment();
+                nfc.setArguments(b);
+
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, nfc).addToBackStack(null).commit();
             }
             else{
                 Toast.makeText(this, "Droit insuffisant.", Toast.LENGTH_LONG).show();
@@ -303,55 +350,52 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        //TODO: faire des choses avec ca
+    protected void onNewIntent(Intent intent){
+        super.onNewIntent(intent);
+        Fragment frag = getFragmentManager().findFragmentById(R.id.fragment_container);
 
-        mState = STATE_RIEN;
-
-        try{
-            JSONObject json = new JSONObject(data.getStringExtra("json"));
-            Toast.makeText(this, "Status: " + json.getString("status"), Toast.LENGTH_SHORT).show();
-
-        }
-        catch (Throwable t){
-            Toast.makeText(this, "Retour", Toast.LENGTH_SHORT).show();
-        }
-
-
-        switch (requestCode) {
-            case STATE_COMMANDE:
-                break;
-            case STATE_CONNEXION:
-                break;
-            case STATE_CREATION_COMPTE:
-                break;
-            case STATE_RECHARGEMENT:
-                break;
-            case STATE_VIDANGE:
-                break;
-            case STATE_RIEN:
-            default:
-                Toast.makeText(this, "WTF, le cancer est dans l'application!!", Toast.LENGTH_LONG).show();
-                break;
+        if(mState != STATE_RIEN && frag instanceof NFCFragment){
+            NFCFragment nfc = (NFCFragment) frag;
+            nfc.handleIntent(intent);
         }
     }
 
     /* Retour du network thread */
     @Override
     public void processFinish(JSONObject output) {
+
         if(output.length() != 0){
             try{
                 if(output.get("status").toString().equals("ok")){
-                    mToken = output.get("jeton").toString();
-                    mTimeToken = System.currentTimeMillis();
-                    mDroit = output.getInt("droit");
-                    mUser = output.get("login").toString();
-                    Toast.makeText(this, "Bonjour " + mUser + " vous êtes bien connecté pour " + EXPIRATION / (1000 * 60) + " minutes.", Toast.LENGTH_LONG).show();
-                    final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-                    viewPager.setCurrentItem(1);
+                    switch (mState){
+                        case STATE_COMMANDE:
+                            Snackbar.make(findViewById(R.id.coordinator), "Client débité de " + output.get("montant") + "€. " + output.get("soldeAncien") + "€ -> " + output.getString("soldeNouveau") + "€", Snackbar.LENGTH_INDEFINITE).show();
+                            break;
+                        case STATE_CONNEXION:
+                            mToken = output.get("jeton").toString();
+                            mTimeToken = System.currentTimeMillis();
+                            mDroit = output.getInt("droit");
+                            mUser = output.get("login").toString();
+                            Snackbar.make(findViewById(R.id.coordinator), "Bonjour " + mUser + " vous êtes connecté pour " + EXPIRATION / (1000 * 60) + " minutes.", Snackbar.LENGTH_SHORT).show();
+                            getFragmentManager().beginTransaction().replace(R.id.fragment_container, new main_tab_frag()).commit();
+                            break;
+                        case STATE_CREATION_COMPTE:
+                            Snackbar.make(findViewById(R.id.coordinator), "Client créé avec un solde de " + output.get("soldeNouveau") + "€", Snackbar.LENGTH_INDEFINITE).show();
+                            break;
+                        case STATE_RECHARGEMENT:
+                            Snackbar.make(findViewById(R.id.coordinator), "Client rechargé: " + output.get("soldeAncien") + "€ ->" + output.get("soldeNouveau") + "€", Snackbar.LENGTH_INDEFINITE).show();
+                            break;
+                        case STATE_VIDANGE:
+                            Snackbar.make(findViewById(R.id.coordinator), "Client vidé: " + output.get("soldeAncien") + "€ -> 0€", Snackbar.LENGTH_INDEFINITE).show();
+                            break;
+                        case STATE_RIEN:
+                        default:
+                            Toast.makeText(this, "WTF, le cancer est dans l'application!!", Toast.LENGTH_LONG).show();
+                            break;
+                    }
                 }
                 else{
-                    Toast.makeText(this, "Erreur dans la requête: " + output.get("status"), Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Erreur: " + output.get("status"), Toast.LENGTH_LONG).show();
                 }
             }
             catch(Throwable t){
@@ -361,6 +405,9 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
         else{
             Toast.makeText(this, "Impossible de se connecter au serveur", Toast.LENGTH_LONG).show();
         }
+
+        mState = STATE_RIEN;
+        getFragmentManager().popBackStack();
     }
 
     public String getToken(){
@@ -376,6 +423,7 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
         mDroit = 0;
         mUser = null;
         mTimeToken = -1;
+        mState = STATE_RIEN;
 
         Toast.makeText(this, "Veuillez vous reconnecter.", Toast.LENGTH_SHORT).show();
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
