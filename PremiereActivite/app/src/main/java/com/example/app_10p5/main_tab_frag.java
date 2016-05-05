@@ -24,8 +24,7 @@ public class main_tab_frag extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View ret = inflater.inflate(R.layout.fragment_main_tab_frag, container, false);
 
@@ -39,6 +38,7 @@ public class main_tab_frag extends Fragment {
         tabLayout.addTab(tabLayout.newTab().setText("Création"));
         tabLayout.addTab(tabLayout.newTab().setText("Vidange"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
 
         final ViewPager viewPager = (ViewPager) ret.findViewById(R.id.pager);
         final PagerAdapter adapter = new PagerAdapter(getChildFragmentManager(), tabLayout.getTabCount());
