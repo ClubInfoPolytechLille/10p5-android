@@ -60,9 +60,11 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
         setContentView(R.layout.layout_main);
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
+        setTitle("Geoffrey la pute");
+
         mState = STATE_RIEN;
         mTimeToken = -1;
-        mToken = "";
+        mToken = null;
 
         getActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorPrimary)));
 
@@ -373,7 +375,7 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
         mToken = null;
         mDroit = 0;
         mUser = null;
-        mTimeToken = 0;
+        mTimeToken = -1;
 
         Toast.makeText(this, "Veuillez vous reconnecter.", Toast.LENGTH_SHORT).show();
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
