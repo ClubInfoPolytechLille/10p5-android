@@ -9,7 +9,7 @@
         app:showAsAction="ifRoom|withText" />
 
     <item
-        android:id="@+id/action_delete"
+        android:id="@+id/action_disconnect"
         android:icon="@android:drawable/ic_menu_delete"
         android:title="@string/disconnect"
         android:showAsAction="ifRoom|withText"

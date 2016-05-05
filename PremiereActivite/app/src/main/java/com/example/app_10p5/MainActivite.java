@@ -95,6 +95,9 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
        if(item.getItemId() == R.id.action_settings){
            getFragmentManager().beginTransaction().replace(R.id.fragment_container, new SettingsFragment()).addToBackStack("settings").commit();
        }
+        else if(item.getItemId() == R.id.action_disconnect){
+           disconnect();
+       }
 
        return super.onOptionsItemSelected(item);
     }
@@ -152,9 +155,7 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
             }
         }
         else{
-            Toast.makeText(this, "Veuillez vous reconnecter.", Toast.LENGTH_LONG).show();
-            final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-            viewPager.setCurrentItem(0);
+            disconnect();
         }
     }
 
@@ -194,9 +195,7 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
             }
         }
         else{
-            Toast.makeText(this, "Veuillez vous reconnecter.", Toast.LENGTH_LONG).show();
-            final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-            viewPager.setCurrentItem(0);
+            disconnect();
         }
     }
 
@@ -239,9 +238,7 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
             }
         }
         else{
-            Toast.makeText(this, "Veuillez vous reconnecter.", Toast.LENGTH_LONG).show();
-            final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-            viewPager.setCurrentItem(0);
+            disconnect();
         }
     }
 
@@ -299,9 +296,7 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
             }
         }
         else{
-            Toast.makeText(this, "Veuillez vous reconnecter.", Toast.LENGTH_LONG).show();
-            final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-            viewPager.setCurrentItem(0);
+            disconnect();
         }
     }
 
@@ -372,5 +367,16 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
 
     public long getTimeToken(){
         return mTimeToken;
+    }
+
+    public void disconnect(){
+        mToken = null;
+        mDroit = 0;
+        mUser = null;
+        mTimeToken = 0;
+
+        Toast.makeText(this, "Veuillez vous reconnecter.", Toast.LENGTH_SHORT).show();
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager.setCurrentItem(0);
     }
 }
