@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:defaultValue="http://pcbar.insecure.deule.net/"
+        android:title="@string/server"
+        android:key="server_address"
+        android:entries="@array/server_entries"
+        android:entryValues="@array/server_values"/>
+
+</PreferenceScreen>

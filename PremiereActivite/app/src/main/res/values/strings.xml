@@ -11,8 +11,17 @@
     <string name="passCarte">Passez la carte du client</string>
     <string name="disconnect">Déconnexion</string>
     <string name="connect">Connexion</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="server">Serveur</string>
+    <string name="serverTest">Serveur Test</string>
+    <string name="serverBar">Serveur Bar</string>
+    
+    <array name="server_entries">
+        <item>Polytech Bar</item>
+        <item>Beta Test</item>
+    </array>
+    <array name="server_values">
+        <item>http://pcbar.insecure.deule.net/</item>
+        <item>https://10p5.clubinfo.frogeye.fr/</item>
+    </array>
 
 </resources>

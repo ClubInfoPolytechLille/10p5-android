@@ -41,12 +41,13 @@ public class main_tab_frag extends Fragment {
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = (ViewPager) ret.findViewById(R.id.pager);
-        final PagerAdapter adapter = new PagerAdapter(getFragmentManager(), tabLayout.getTabCount());
+        final PagerAdapter adapter = new PagerAdapter(getChildFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+
                 if(parent.getToken() != "" && System.currentTimeMillis() - parent.getTimeToken() < MainActivite.EXPIRATION){
                     viewPager.setCurrentItem(tab.getPosition());
                 }
@@ -67,7 +68,6 @@ public class main_tab_frag extends Fragment {
 
             }
         });
-
         return ret;
     }
 

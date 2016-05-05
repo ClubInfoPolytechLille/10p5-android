@@ -3,16 +3,19 @@ package com.example.app_10p5;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.MifareClassic;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import org.json.JSONObject;
 
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.HashMap;
 
 /**
@@ -24,8 +27,6 @@ public class CarteActivite extends Activity implements ASyncResponse {
     private HashMap<String, String> mParam;
     private String mAPI;
 
-    public static String HOST = "https://10p5.clubinfo.frogeye.fr/";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,35 +35,40 @@ public class CarteActivite extends Activity implements ASyncResponse {
 
         mParam = new HashMap<String, String>();
 
-        switch (getIntent().getIntExtra("state", MainActivite.STATE_RIEN)) {
-            case MainActivite.STATE_COMMANDE:
-                //TODO: XOR du cancer
-                //mParam.put("quantite", String.valueOf(getIntent().getIntExtra("quantite", -1)));
-                mParam.put("montant", String.valueOf(getIntent().getFloatExtra("montant", -1)));
-                mParam.put("jeton", getIntent().getStringExtra("token"));
-                mAPI = "api/client/payer";
-                break;
-            case MainActivite.STATE_CREATION_COMPTE:
-                mParam.put("solde", String.valueOf(getIntent().getFloatExtra("montant", -1)));
-                mParam.put("jeton", getIntent().getStringExtra("token"));
-                mAPI = "api/client/ajouter";
-                break;
-            case MainActivite.STATE_RECHARGEMENT:
-                System.out.println("bite");
-                mParam.put("montant", String.valueOf(getIntent().getFloatExtra("montant", -1)));
-                mParam.put("jeton", getIntent().getStringExtra("token"));
-                mAPI = "api/client/recharger";
-                break;
-            case MainActivite.STATE_VIDANGE:
-                mParam.put("jeton", getIntent().getStringExtra("token"));
-                mAPI = "api/client/vidange";
-                break;
-            case MainActivite.STATE_CONNEXION:  //Impossible c'est pas géré ici
-            case MainActivite.STATE_RIEN:
-            default:
-                Toast.makeText(this, "WTF, le cancer est dans l'application!!", Toast.LENGTH_LONG).show();
-                finish();
-                return;
+        try {
+            switch (getIntent().getIntExtra("state", MainActivite.STATE_RIEN)) {
+                case MainActivite.STATE_COMMANDE:
+                    //TODO: XOR du cancer
+                    //mParam.put("quantite", String.valueOf(getIntent().getIntExtra("quantite", -1)));
+                    mParam.put("montant", URLEncoder.encode(String.valueOf(getIntent().getFloatExtra("montant", -1)), "UTF-8"));
+                    mParam.put("jeton", URLEncoder.encode(getIntent().getStringExtra("token"), "UTF-8"));
+                    mAPI = "api/client/payer";
+                    break;
+                case MainActivite.STATE_CREATION_COMPTE:
+                    mParam.put("solde", URLEncoder.encode(String.valueOf(getIntent().getFloatExtra("montant", -1)), "UTF-8"));
+                    mParam.put("jeton", URLEncoder.encode(getIntent().getStringExtra("token"), "UTF-8"));
+                    mAPI = "api/client/ajouter";
+                    break;
+                case MainActivite.STATE_RECHARGEMENT:
+                    System.out.println("bite");
+                    mParam.put("montant", URLEncoder.encode(String.valueOf(getIntent().getFloatExtra("montant", -1)), "UTF-8"));
+                    mParam.put("jeton", URLEncoder.encode(getIntent().getStringExtra("token"), "UTF-8"));
+                    mAPI = "api/client/recharger";
+                    break;
+                case MainActivite.STATE_VIDANGE:
+                    mParam.put("jeton", URLEncoder.encode(getIntent().getStringExtra("token"), "UTF-8"));
+                    mAPI = "api/client/vidange";
+                    break;
+                case MainActivite.STATE_CONNEXION:  //Impossible c'est pas géré ici
+                case MainActivite.STATE_RIEN:
+                default:
+                    Toast.makeText(this, "WTF, le cancer est dans l'application!!", Toast.LENGTH_LONG).show();
+                    finish();
+                    return;
+            }
+        }
+        catch (Throwable t){
+            System.out.println("Exception: " + t.toString());
         }
 
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -182,7 +188,8 @@ public class CarteActivite extends Activity implements ASyncResponse {
 
     public void clientAPI() {
         try {
-            URL url = new URL(HOST + mAPI);
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            URL url = new URL(settings.getString("server_address", null) + mAPI);
             NetworkThread nt = new NetworkThread(url, mParam);
             nt.delegate = this;
             nt.execute();
