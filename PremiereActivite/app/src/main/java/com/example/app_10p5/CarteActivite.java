@@ -120,57 +120,6 @@ public class CarteActivite extends Activity implements ASyncResponse {
         if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
             String id_carte = ByteArrayToHexString(intent.getByteArrayExtra(NfcAdapter.EXTRA_ID));
             mParam.put("idCarte", id_carte);
-
-            //Lecture des données
-            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-            MifareClassic mfc = MifareClassic.get(tag);
-            byte[] data;
-            String prenom = null, nom = null, login = null;
-
-            if (mfc != null) {
-                try {
-                    mfc.connect();
-
-                    //Clé A
-                    byte[] cleA = new byte[]{(byte) 0xa0, (byte) 0xa1, (byte) 0xa2,
-                            (byte) 0xa3, (byte) 0xa4, (byte) 0xa5};
-
-                    //On veut juste lire le secteur 12
-                    boolean estConnecte = mfc.authenticateSectorWithKeyA(12, cleA);
-
-                    if (estConnecte) {
-                        //Il y a 4 blocs dans le secteur 12 -> INE, numéro étudiant, prénom, nom
-                        //On ne veut que prénom et nom, donc on passe les deux premiers
-                        for (int i = 2, bIndex = mfc.sectorToBlock(12) + i; i < 4; i++, bIndex++) {
-                            //sectorToBlock : Renvoie l'indice (global, parmis tous les blocs de
-                            // tous les secteurs) du premier bloc du secteur 12
-                            //Lit les données du bloc
-                            data = mfc.readBlock(bIndex);
-
-                            //Convertit les bytes en String
-                            String dataStr = new String(data);
-                            if (i == 2) //Prénom
-                                prenom = dataStr;
-                            else if (i == 3) //Nom
-                                nom = dataStr;
-                        }
-                    } else {
-                        Toast.makeText(this, "Impossible de lire le secteur 12", Toast.LENGTH_LONG).show();
-                    }
-                    mfc.close();
-                } catch (Throwable t) {
-                    Toast.makeText(this, "WTF, le cancer est dans l'application!! Autodéstruction dans 5 secondes !!!!!!!!!" + t.toString(), Toast.LENGTH_LONG).show();
-                }
-
-                //Concaténation des données récupérées en login
-                login = prenom;
-                login.concat(".");
-                login.concat(nom);
-            } else {
-                Toast.makeText(this, "Pas de Mifare Classic", Toast.LENGTH_SHORT).show();
-            }
-
-            //Éxécution de la fonction
             clientAPI();
             }
         }
