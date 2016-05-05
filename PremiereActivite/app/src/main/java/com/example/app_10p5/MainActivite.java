@@ -60,7 +60,7 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
         setContentView(R.layout.layout_main);
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
-        setTitle("Geoffrey la pute");
+        setTitle(getResources().getString(R.string.app_name));
 
         mState = STATE_RIEN;
         mTimeToken = -1;
