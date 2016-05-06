@@ -60,7 +60,7 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
 
         mState = STATE_RIEN;
         mTimeToken = -1;
-        mToken = null;
+        mToken = "";
 
         getActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorPrimary)));
         mNfcAdapter = NfcAdapter.getDefaultAdapter(getApplicationContext());
@@ -199,40 +199,60 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
     public void valideCommande(View v)
     {
         if((TextUtils.getTrimmedLength(mToken) == 30) && ((System.currentTimeMillis() - mTimeToken) < EXPIRATION)) {
-            EditText champMontant = (EditText) findViewById(R.id.commande_prix);
-            EditText champQuantite = (EditText) findViewById(R.id.commande_quantite);
-            float montant = 0.0f;
-            int quantite = 0;
-
-            //TODO: gérer le XOR de pute
-
-            try{
-                montant = Float.parseFloat(champMontant.getText().toString());
-                quantite = Integer.parseInt(champQuantite.getText().toString());
-            }
-            catch (Throwable t)
-            {
-                Toast.makeText(this, "Remplir les champs avec des nombres: " + t.toString(), Toast.LENGTH_LONG).show();
-            }
-
-            if ((montant > 0.0f) && (montant < 200.0f) && (quantite > 0) && (mDroit >= 1)) {
+            if(mDroit >= 1){
                 mState = STATE_COMMANDE;
-                champMontant.setText(null);
-                champQuantite.setText(null);
-
                 Bundle b = new Bundle();
                 b.putString("token", mToken);
                 b.putInt("state", mState);
-                b.putFloat("montant", montant);
-                b.putInt("quantite", quantite);
 
                 NFCFragment nfc = new NFCFragment();
-                nfc.setArguments(b);
 
+                switch (v.getId()){
+                    case R.id.commande_validation:
+                        EditText champMontant = (EditText) findViewById(R.id.commande_prix);
+                        float montant = 0.0f;
+
+                        try{
+                            montant = Float.parseFloat(champMontant.getText().toString().replace(",", "."));
+                        }
+                        catch (Throwable t)
+                        {
+                            Toast.makeText(this, "Remplir le prix avec un nombre: " + t.toString(), Toast.LENGTH_SHORT).show();
+                        }
+                        if ((montant > 0.0f) && (montant < 200.0f)) {
+                            champMontant.setText(null);
+                            b.putFloat("montant", montant);
+                            b.putInt("quantite", 0);
+                        }
+                        else{
+                            Toast.makeText(this, "Valeur incorrecte.", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    case R.id.button1:
+                        b.putInt("quantite", 1);
+                        break;
+                    case R.id.button2:
+                        b.putInt("quantite", 2);
+                        break;
+                    case R.id.button3:
+                        b.putInt("quantite", 3);
+                        break;
+                    case R.id.button4:
+                        b.putInt("quantite", 4);
+                        break;
+                    case R.id.button5:
+                        b.putInt("quantite", 5);
+                        break;
+                    case R.id.button6:
+                        b.putInt("quantite", 6);
+                        break;
+                }
+
+                nfc.setArguments(b);
                 getFragmentManager().beginTransaction().replace(R.id.fragment_container, nfc).addToBackStack(null).commit();
             }
             else{
-                Toast.makeText(this, "Valeur incorrecte ou droit insuffisant.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Droit insuffisant.", Toast.LENGTH_SHORT).show();
             }
         }
         else{
@@ -242,7 +262,6 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
 
     public void valideRechargement(View v)
     {
-        System.out.println(TextUtils.getTrimmedLength(mToken));
         if((TextUtils.getTrimmedLength(mToken) == 30) && ((System.currentTimeMillis() - mTimeToken) < EXPIRATION)) {
             EditText champMontant = (EditText) findViewById(R.id.rechargement_champ_montant);
             float montant = 0.0f;
@@ -419,14 +438,13 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
     }
 
     public void disconnect(){
-        mToken = null;
+        mToken = "";
         mDroit = 0;
         mUser = null;
         mTimeToken = -1;
         mState = STATE_RIEN;
 
-        Toast.makeText(this, "Veuillez vous reconnecter.", Toast.LENGTH_SHORT).show();
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        viewPager.setCurrentItem(0);
+        Snackbar.make(findViewById(R.id.coordinator), "Veuillez vous reconnecter", Snackbar.LENGTH_SHORT).show();
+        getFragmentManager().beginTransaction().replace(R.id.fragment_container, new ConnectionFragment()).commit();
     }
 }

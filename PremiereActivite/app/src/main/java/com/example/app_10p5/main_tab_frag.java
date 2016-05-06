@@ -1,6 +1,5 @@
 package com.example.app_10p5;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -9,8 +8,6 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
-
 
 public class main_tab_frag extends Fragment {
 
@@ -51,9 +48,7 @@ public class main_tab_frag extends Fragment {
                     viewPager.setCurrentItem(tab.getPosition());
                 }
                 else{
-                    viewPager.setCurrentItem(tab.getPosition());    //Empeche un bug graphique
-                    viewPager.setCurrentItem(0);
-                    Toast.makeText(parent, "Veuillez vous connecter.", Toast.LENGTH_LONG).show();
+                    parent.disconnect();
                 }
             }
 
