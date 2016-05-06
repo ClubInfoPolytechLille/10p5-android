@@ -5,6 +5,7 @@
     <!-- Nécessaire pour utiliser les cartes NFC -->
     <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.INTERNET" />
+
     <uses-feature android:name="android.hardware.nfc" android:required="true" />
 
     <application
@@ -13,16 +14,10 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".CarteActivite"
-            android:launchMode="singleTask"
-            android:label="CarteActivite"
-            android:parentActivityName="com.example.app_10p5.MainActivite" >
-        </activity>
 
         <activity
             android:name=".MainActivite"
-            android:label="MainActivite">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
