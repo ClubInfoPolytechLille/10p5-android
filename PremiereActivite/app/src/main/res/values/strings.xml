@@ -14,6 +14,12 @@
     <string name="server">Serveur</string>
     <string name="serverTest">Serveur Test</string>
     <string name="serverBar">Serveur Bar</string>
+    <string name="one">1</string>
+    <string name="two">2</string>
+    <string name="three">3</string>
+    <string name="four">4</string>
+    <string name="five">5</string>
+    <string name="six">6</string>
     
     <array name="server_entries">
         <item>Polytech Bar</item>

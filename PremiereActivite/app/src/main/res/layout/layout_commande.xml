@@ -12,25 +12,91 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <EditText
-            android:layout_width="wrap_content"
+        <TableLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="number"
-            android:ems="10"
-            android:id="@+id/commande_quantite"
-            android:editable="true"
-            android:elegantTextHeight="true"
-            android:enabled="true"
-            android:numeric="integer"
-            android:width="300dp"
-            android:hint="@string/quant"
-            android:textAlignment="center"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:height="150dp"
-            android:minHeight="50dp"
-            android:maxHeight="500dp"
-            android:minWidth="120dp" />
+            android:layout_margin="30dp">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/one"
+                    android:id="@+id/button"
+                    android:layout_column="0"
+                    android:layout_weight="1"
+                    android:height="60dp"/>
+
+                <Button
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/two"
+                    android:id="@+id/button3"
+                    android:layout_column="1"
+                    android:layout_weight="1"
+                    android:height="60dp"/>
+
+                <Button
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/three"
+                    android:id="@+id/button4"
+                    android:layout_column="2"
+                    android:layout_weight="1"
+                    android:height="60dp"/>
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/four"
+                    android:id="@+id/button2"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_column="0"
+                    android:layout_weight="1"
+                    android:height="60dp"/>
+
+                <Button
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/five"
+                    android:id="@+id/button6"
+                    android:layout_column="1"
+                    android:layout_weight="1"
+                    android:height="60dp"/>
+
+                <Button
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/six"
+                    android:id="@+id/button5"
+                    android:layout_column="2"
+                    android:layout_weight="1"
+                    android:height="60dp"/>
+            </TableRow>
+
+        </TableLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginBottom="30dp"/>
 
         <EditText
             android:layout_width="wrap_content"
