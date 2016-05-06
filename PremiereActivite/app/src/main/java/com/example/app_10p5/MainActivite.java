@@ -388,7 +388,6 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
                 if(output.get("status").toString().equals("ok")){
                     switch (mState){
                         case STATE_COMMANDE:
-                            Snackbar.make(findViewById(R.id.coordinator), "Client débité de " + output.get("montant") + "€. " + output.get("soldeAncien") + "€ -> " + output.getString("soldeNouveau") + "€", Snackbar.LENGTH_INDEFINITE).show();
                             break;
                         case STATE_CONNEXION:
                             mToken = output.get("jeton").toString();
@@ -402,10 +401,8 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
                             Snackbar.make(findViewById(R.id.coordinator), "Client créé avec un solde de " + output.get("soldeNouveau") + "€", Snackbar.LENGTH_INDEFINITE).show();
                             break;
                         case STATE_RECHARGEMENT:
-                            Snackbar.make(findViewById(R.id.coordinator), "Client rechargé: " + output.get("soldeAncien") + "€ ->" + output.get("soldeNouveau") + "€", Snackbar.LENGTH_INDEFINITE).show();
                             break;
                         case STATE_VIDANGE:
-                            Snackbar.make(findViewById(R.id.coordinator), "Client vidé: " + output.get("soldeAncien") + "€ -> 0€", Snackbar.LENGTH_INDEFINITE).show();
                             break;
                         case STATE_RIEN:
                         default:
