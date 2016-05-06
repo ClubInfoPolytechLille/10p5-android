@@ -37,27 +37,27 @@ public class NFCFragment extends Fragment {
         Bundle b = getArguments();
 
         try {
+            mParam.put("jeton", URLEncoder.encode(b.getString("token"), "UTF-8"));
             switch (b.getInt("state")) {
                 case MainActivite.STATE_COMMANDE:
-                    //TODO: XOR du cancer
-                    //mParam.put("quantite", String.valueOf(getIntent().getIntExtra("quantite", -1)));
-                    mParam.put("montant", URLEncoder.encode(String.valueOf(b.getFloat("montant")), "UTF-8"));
-                    mParam.put("jeton", URLEncoder.encode(b.getString("token"), "UTF-8"));
+                    if(b.getInt("quantite") != 0){
+                        mParam.put("quantite", URLEncoder.encode(String.valueOf(b.getInt("quantite")), "UTF-8"));
+                    }
+                    else{
+                        mParam.put("montant", URLEncoder.encode(String.valueOf(b.getFloat("montant")), "UTF-8"));
+
+                    }
                     mAPI = "api/client/payer";
                     break;
                 case MainActivite.STATE_CREATION_COMPTE:
                     mParam.put("solde", URLEncoder.encode(String.valueOf(b.getFloat("montant")), "UTF-8"));
-                    mParam.put("jeton", URLEncoder.encode(b.getString("token"), "UTF-8"));
                     mAPI = "api/client/ajouter";
                     break;
                 case MainActivite.STATE_RECHARGEMENT:
-                    System.out.println("bite");
                     mParam.put("montant", URLEncoder.encode(String.valueOf(b.getFloat("montant")), "UTF-8"));
-                    mParam.put("jeton", URLEncoder.encode(b.getString("token"), "UTF-8"));
                     mAPI = "api/client/recharger";
                     break;
                 case MainActivite.STATE_VIDANGE:
-                    mParam.put("jeton", URLEncoder.encode(b.getString("token"), "UTF-8"));
                     mAPI = "api/client/vidange";
                     break;
                 case MainActivite.STATE_CONNEXION:  //Impossible c'est pas géré ici
@@ -68,6 +68,7 @@ public class NFCFragment extends Fragment {
         }
         catch (Throwable t){
             System.out.println("Exception: " + t.toString());
+            Snackbar.make(getActivity().findViewById(R.id.coordinator), "WTF, le cancer est dans l'application!! " + t.toString(), Snackbar.LENGTH_INDEFINITE).show();
         }
 
         return ret;
