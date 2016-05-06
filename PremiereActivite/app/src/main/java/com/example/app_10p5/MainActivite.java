@@ -12,7 +12,6 @@ import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,6 +38,8 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
     public static final int STATE_RECHARGEMENT = 2;
     public static final int STATE_CREATION_COMPTE = 1;
     public static final int STATE_CONNEXION = 5;
+    public static final int STATE_ANNULER= 6;
+    public static final int STATE_REFAIRE = 7;
 
     public static final long EXPIRATION = 1000*60*10;
 
@@ -388,7 +389,7 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
                 if(output.get("status").toString().equals("ok")){
                     switch (mState){
                         case STATE_COMMANDE:
-                            Snackbar.make(findViewById(R.id.coordinator), "Client débité de " + output.get("montant") + "€. " + output.get("soldeAncien") + "€ → " + output.getString("soldeNouveau") + "€", Snackbar.LENGTH_INDEFINITE).show();
+                            Snackbar.make(findViewById(R.id.coordinator), "Client débité de " + output.get("montant") + "€. " + output.get("soldeAncien") + "€ → " + output.getString("soldeNouveau") + "€", Snackbar.LENGTH_LONG).setAction("ANNULER", new viewListenerAnnulerRefaire(output.getInt("idTransaction"), this, true)).show();
                             break;
                         case STATE_CONNEXION:
                             mToken = output.get("jeton").toString();
@@ -399,13 +400,19 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
                             getFragmentManager().beginTransaction().replace(R.id.fragment_container, new main_tab_frag()).commit();
                             break;
                         case STATE_CREATION_COMPTE:
-                            Snackbar.make(findViewById(R.id.coordinator), "Client créé avec un solde de " + output.get("soldeNouveau") + "€", Snackbar.LENGTH_INDEFINITE).show();
+                            Snackbar.make(findViewById(R.id.coordinator), "Client créé avec un solde de " + output.get("soldeNouveau") + "€", Snackbar.LENGTH_LONG).setAction("ANNULER", new viewListenerAnnulerRefaire(output.getInt("idTransaction"), this, true)).show();
                             break;
                         case STATE_RECHARGEMENT:
-                            Snackbar.make(findViewById(R.id.coordinator), "Client rechargé: " + output.get("soldeAncien") + "€ →" + output.get("soldeNouveau") + "€", Snackbar.LENGTH_INDEFINITE).show();
+                            Snackbar.make(findViewById(R.id.coordinator), "Client rechargé: " + output.get("soldeAncien") + "€ → " + output.get("soldeNouveau") + "€", Snackbar.LENGTH_LONG).setAction("ANNULER", new viewListenerAnnulerRefaire(output.getInt("idTransaction"), this, true)).show();
                             break;
                         case STATE_VIDANGE:
-                            Snackbar.make(findViewById(R.id.coordinator), "Client vidé: " + output.get("soldeAncien") + "€ → 0€", Snackbar.LENGTH_INDEFINITE).show();
+                            Snackbar.make(findViewById(R.id.coordinator), "Client vidé: " + output.get("soldeAncien") + "€ → 0€", Snackbar.LENGTH_LONG).setAction("ANNULER", new viewListenerAnnulerRefaire(output.getInt("idTransaction"), this, true)).show();
+                            break;
+                        case STATE_ANNULER:
+                            Snackbar.make(findViewById(R.id.coordinator), "Transaction annulée: " + output.get("soldeAncien") + "€ → " + output.get("soldeNouveau") + "€", Snackbar.LENGTH_LONG).setAction("REFAIRE", new viewListenerAnnulerRefaire(output.getInt("idTransaction"), this, false)).show();
+                            break;
+                        case STATE_REFAIRE:
+                            Snackbar.make(findViewById(R.id.coordinator), "Transaction rétablie: " + output.get("soldeAncien") + "€ → " + output.get("soldeNouveau") + "€", Snackbar.LENGTH_LONG).setAction("ANNULER", new viewListenerAnnulerRefaire(output.getInt("idTransaction"), this, true)).show();
                             break;
                         case STATE_RIEN:
                         default:
@@ -446,5 +453,33 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
 
         Snackbar.make(findViewById(R.id.coordinator), "Veuillez vous reconnecter", Snackbar.LENGTH_SHORT).show();
         getFragmentManager().beginTransaction().replace(R.id.fragment_container, new ConnectionFragment()).commit();
+    }
+
+    public void annulerTransaction(int idTransaction, boolean annuler){
+        try{
+            HashMap<String, String> param = new HashMap<String, String>();
+            param.put("idTransaction", URLEncoder.encode(String.valueOf(idTransaction), "UTF-8"));
+            param.put("jeton", URLEncoder.encode(mToken, "UTF-8"));
+
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+            URL url;
+
+            if(annuler){
+                mState = STATE_ANNULER;
+                url = new URL(settings.getString("server_address", null) + "api/annuler");
+            }
+            else{
+                mState = STATE_REFAIRE;
+                url = new URL(settings.getString("server_address", null) + "api/refaire");
+            }
+
+            NetworkThread nt = new NetworkThread(url, param);
+            nt.delegate = this;
+            nt.execute();
+        }
+        catch (Throwable t){
+            System.out.println(t.toString());
+        }
     }
 }

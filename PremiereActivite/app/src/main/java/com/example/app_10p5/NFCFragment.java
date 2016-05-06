@@ -61,6 +61,8 @@ public class NFCFragment extends Fragment {
                     mAPI = "api/client/vidange";
                     break;
                 case MainActivite.STATE_CONNEXION:  //Impossible c'est pas géré ici
+                case MainActivite.STATE_ANNULER:
+                case MainActivite.STATE_REFAIRE:
                 case MainActivite.STATE_RIEN:
                 default:
                     Snackbar.make(getActivity().findViewById(R.id.coordinator), "WTF, le cancer est dans l'application!!", Snackbar.LENGTH_INDEFINITE).show();
