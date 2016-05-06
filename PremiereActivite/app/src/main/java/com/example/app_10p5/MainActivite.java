@@ -29,7 +29,7 @@ import java.util.HashMap;
 
 
 /**
- * Created by beaus on 24/04/2016.
+ * Created by Jean-loup Beaussart on 24/04/2016.
  */
 public class MainActivite extends Activity implements ASyncResponse, main_tab_frag.OnFragmentInteractionListener {
 

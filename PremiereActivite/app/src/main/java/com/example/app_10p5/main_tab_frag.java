@@ -9,6 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+/**
+ * Created by Jean-loup Beaussart on 04/05/2016.
+ */
+
 public class main_tab_frag extends Fragment {
 
 

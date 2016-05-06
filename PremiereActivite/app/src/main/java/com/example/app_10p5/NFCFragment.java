@@ -17,7 +17,7 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 
 /**
- * Created by beaus on 05/05/2016.
+ * Created by Jean-loup Beaussart on 05/05/2016.
  */
 public class NFCFragment extends Fragment {
     private HashMap<String, String> mParam;

@@ -1,7 +1,7 @@
 package com.example.app_10p5;
 
 /**
- * Created by beaus on 24/04/2016.
+ * Created by Jean-loup Beaussart on 24/04/2016.
  */
 import android.app.Fragment;
 import android.app.FragmentManager;

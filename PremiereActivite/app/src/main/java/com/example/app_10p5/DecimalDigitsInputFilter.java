@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by beaus on 02/05/2016.
+ * Created by Jean-loup Beaussart on 02/05/2016.
  */
 public class DecimalDigitsInputFilter implements InputFilter {
 

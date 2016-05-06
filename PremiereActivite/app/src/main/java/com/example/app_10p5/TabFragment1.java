@@ -14,7 +14,7 @@ import android.widget.EditText;
 import java.util.ArrayList;
 
 /**
- * Created by beaus on 24/04/2016.
+ * Created by Jean-loup Beaussart on 24/04/2016.
  */
 
 public class TabFragment1 extends Fragment {

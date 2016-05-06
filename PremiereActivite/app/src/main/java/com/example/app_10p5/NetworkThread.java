@@ -15,7 +15,7 @@ import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
 
 /**
- * Created by beaus on 30/04/2016.
+ * Created by Jean-loup Beaussart on 30/04/2016.
  */
 public class NetworkThread extends AsyncTask<Void, Void, JSONObject> {
     public ASyncResponse delegate = null;
