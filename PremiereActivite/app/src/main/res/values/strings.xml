@@ -22,12 +22,14 @@
     <string name="six">6</string>
     
     <array name="server_entries">
-        <item>Polytech Bar</item>
+        <item>Polytech Bar HTTP</item>
         <item>Beta Test</item>
+        <item>Polytech Bar HTTPS</item>
     </array>
     <array name="server_values">
         <item>http://pcbar.insecure.deule.net/</item>
         <item>https://10p5.clubinfo.frogeye.fr/</item>
+        <item>https://pcbar.insecure.deule.net/</item>
     </array>
 
 </resources>

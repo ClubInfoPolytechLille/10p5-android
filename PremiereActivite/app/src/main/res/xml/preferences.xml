@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ListPreference
-        android:defaultValue="http://pcbar.insecure.deule.net/"
+        android:defaultValue="https://pcbar.insecure.deule.net/"
         android:title="@string/server"
         android:key="server_address"
         android:entries="@array/server_entries"
