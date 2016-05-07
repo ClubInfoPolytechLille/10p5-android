@@ -9,7 +9,7 @@ import android.content.Intent;
 public abstract class NFC extends Fragment {
 
     // Convertit l'array de byte en chaîne hexadécimale (si le byte = 0x63, str = "63").
-    public String ByteArrayToHexString(byte [] inarray) {
+    String ByteArrayToHexString(byte[] inarray) {
         int i, j, in;
         String [] hex = {"0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"};
         String out= "";

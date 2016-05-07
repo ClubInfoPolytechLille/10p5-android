@@ -18,7 +18,7 @@
             android:layout_marginTop="40dp"
             android:textAlignment="center"
             android:textSize="80sp"
-            android:textColor="@color/abc_input_method_navigation_guard" />
+            android:textColor="@color/black" />
 
         <Button
             android:layout_width="wrap_content"

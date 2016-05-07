@@ -79,7 +79,7 @@ public class NFCFragment extends NFC {
     }
 
 
-    public void clientAPI() {
+    private void clientAPI() {
         try {
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
             URL url = new URL(settings.getString("server_address", null) + mAPI);

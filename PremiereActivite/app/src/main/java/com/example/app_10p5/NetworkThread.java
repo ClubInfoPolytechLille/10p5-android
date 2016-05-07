@@ -17,23 +17,15 @@ import javax.net.ssl.HttpsURLConnection;
 /**
  * Created by Jean-loup Beaussart on 30/04/2016.
  */
-public class NetworkThread extends AsyncTask<Void, Void, JSONObject> {
+class NetworkThread extends AsyncTask<Void, Void, JSONObject> {
     public ASyncResponse delegate = null;
-    private URL mUrl;
-    private HashMap<String, String> mParam;
+    private final URL mUrl;
+    private final HashMap<String, String> mParam;
 
     NetworkThread(URL url, HashMap<String, String> param){
 
         mUrl = url;
         mParam = param;
-    }
-
-    @Override
-    protected void onPreExecute() {
-        /**
-         * show dialog
-         */
-        super.onPreExecute();
     }
 
     @Override

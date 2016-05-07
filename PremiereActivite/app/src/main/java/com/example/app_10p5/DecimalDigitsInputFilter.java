@@ -9,13 +9,12 @@ import java.util.regex.Pattern;
 /**
  * Created by Jean-loup Beaussart on 02/05/2016.
  */
-public class DecimalDigitsInputFilter implements InputFilter {
+class DecimalDigitsInputFilter implements InputFilter {
 
-    Pattern mPattern;
+    private final Pattern mPattern;
 
     public DecimalDigitsInputFilter(int digitsBeforeZero,int digitsAfterZero) {
         mPattern = Pattern.compile("(0|[1-9][0-9]{0,2})?([,.][0-9]{0,2})?");
-
     }
 
     @Override

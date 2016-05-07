@@ -5,10 +5,10 @@ import android.view.View;
 /**
  * Created by Jean-loup Beaussart on 06/05/2016.
  */
-public class viewListenerAnnulerRefaire implements View.OnClickListener {
-    private int mIdTransaction;
-    private MainActivite mMain;
-    private boolean mAnnuler;
+class viewListenerAnnulerRefaire implements View.OnClickListener {
+    private final int mIdTransaction;
+    private final MainActivite mMain;
+    private final boolean mAnnuler;
 
     viewListenerAnnulerRefaire(int idTransaction, MainActivite main, boolean annuler){
         mIdTransaction = idTransaction;

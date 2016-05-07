@@ -20,8 +20,7 @@ public class ConnectionFragment extends NFC {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View ret = inflater.inflate(R.layout.layout_connection, container, false);
-        return ret;
+        return inflater.inflate(R.layout.layout_connection, container, false);
     }
 
     @Override
