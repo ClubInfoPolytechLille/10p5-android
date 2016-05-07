@@ -40,6 +40,7 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
     public static final int STATE_CONNEXION = 5;
     public static final int STATE_ANNULER= 6;
     public static final int STATE_REFAIRE = 7;
+    public static final int STATE_DECONNEXION = 8;
 
     public static final long EXPIRATION = 1000*60*10;
 
@@ -392,11 +393,11 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
         Fragment frag = getFragmentManager().findFragmentById(R.id.fragment_container);
 
         if(NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())){
-            if(mState != STATE_RIEN && frag instanceof NFCFragment){
+            if(((mState == STATE_RECHARGEMENT) || (mState == STATE_COMMANDE) || (mState == STATE_VIDANGE) || (mState == STATE_CREATION_COMPTE)) && (frag instanceof NFCFragment)){
                 NFCFragment nfc = (NFCFragment) frag;
                 nfc.handleIntent(intent);
             }
-            else if(mState == STATE_RIEN && frag instanceof ConnectionFragment){
+            else if((mState == STATE_RIEN) && (frag instanceof ConnectionFragment)){
                 mState = STATE_CONNEXION;
                 ConnectionFragment co = (ConnectionFragment) frag;
                 co.handleIntent(intent);
@@ -439,6 +440,9 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
                         case STATE_REFAIRE:
                             Snackbar.make(findViewById(R.id.coordinator), "Transaction rétablie: " + output.get("soldeAncien") + "€ → " + output.get("soldeNouveau") + "€", Snackbar.LENGTH_LONG).setAction("ANNULER", new viewListenerAnnulerRefaire(output.getInt("idTransaction"), this, true)).show();
                             break;
+                        case STATE_DECONNEXION:
+                            System.out.println("Déconnexion réussie.");
+                            break;
                         case STATE_RIEN:
                         default:
                             Toast.makeText(this, "WTF, le cancer est dans l'application!!", Toast.LENGTH_LONG).show();
@@ -470,11 +474,26 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
     }
 
     public void disconnect(){
+        try{
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            URL url = new URL(settings.getString("server_address", null) + "api/utilisateur/deconnexion");
+            HashMap<String, String> param = new HashMap<String, String>();
+            param.put("jeton", mToken);
+            NetworkThread nt = new NetworkThread(url, param);
+            nt.delegate = this;
+            nt.execute();
+        }
+        catch (Throwable t){
+            Toast.makeText(this, "WTF, le cancer est dans l'application!!" + t.toString(), Toast.LENGTH_LONG).show();
+            System.out.println(t.toString());
+        }
+
+
         mToken = "";
         mDroit = 0;
         mUser = null;
         mTimeToken = -1;
-        mState = STATE_RIEN;
+        mState = STATE_DECONNEXION;
 
         Snackbar.make(findViewById(R.id.coordinator), "Veuillez vous reconnecter", Snackbar.LENGTH_SHORT).show();
         getFragmentManager().beginTransaction().replace(R.id.fragment_container, new ConnectionFragment()).commit();

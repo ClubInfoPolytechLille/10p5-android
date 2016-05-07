@@ -58,6 +58,7 @@ public class NFCFragment extends NFC {
                 case MainActivite.STATE_ANNULER:
                 case MainActivite.STATE_REFAIRE:
                 case MainActivite.STATE_RIEN:
+                case MainActivite.STATE_DECONNEXION:
                 default:
                     Snackbar.make(getActivity().findViewById(R.id.coordinator), "WTF, le cancer est dans l'application!!", Snackbar.LENGTH_INDEFINITE).show();
             }
