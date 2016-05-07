@@ -19,13 +19,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;;
 import android.widget.Toast;
+import android.os.Handler;
 
 import org.json.JSONObject;
 
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
-
 
 /**
  * Created by Jean-loup Beaussart on 24/04/2016.
@@ -41,13 +41,15 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
     public static final int STATE_ANNULER= 6;
     public static final int STATE_REFAIRE = 7;
 
-    public static final long EXPIRATION = 1000*60*10;
+    public static final long EXPIRATION = 1000*10*1;
 
     private int mState;
     private String mToken;
     private int mDroit;
     private long mTimeToken;
     private String mUser;
+    private Handler mTimerHandler;
+    private Runnable mTimerRunnable;
 
     private NfcAdapter mNfcAdapter;
 
@@ -65,6 +67,19 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
 
         getActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorPrimary)));
         mNfcAdapter = NfcAdapter.getDefaultAdapter(getApplicationContext());
+
+        mTimerHandler = new Handler();
+        mTimerRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if(System.currentTimeMillis() - mTimeToken >= EXPIRATION){
+                    afficherPopup();
+                }
+                else{
+                    mTimerHandler.postDelayed(this, 5000);
+                }
+            }
+        };
 
         if(savedInstanceState == null){
             FragmentManager fragmentManager = getFragmentManager();
@@ -398,6 +413,7 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
                             mUser = output.get("login").toString();
                             Snackbar.make(findViewById(R.id.coordinator), "Bonjour " + mUser + " vous êtes connecté pour " + EXPIRATION / (1000 * 60) + " minutes.", Snackbar.LENGTH_SHORT).show();
                             getFragmentManager().beginTransaction().replace(R.id.fragment_container, new main_tab_frag()).commit();
+                            mTimerRunnable.run();
                             break;
                         case STATE_CREATION_COMPTE:
                             Snackbar.make(findViewById(R.id.coordinator), "Client créé avec un solde de " + output.get("soldeNouveau") + "€", Snackbar.LENGTH_LONG).setAction("ANNULER", new viewListenerAnnulerRefaire(output.getInt("idTransaction"), this, true)).show();
@@ -482,4 +498,10 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
             System.out.println(t.toString());
         }
     }
+
+    public void afficherPopup(){
+        Dialogue d = new Dialogue();
+        d.show(getFragmentManager(), null);
+    }
+
 }
