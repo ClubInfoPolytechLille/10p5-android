@@ -14,6 +14,7 @@ public class Dialogue extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setCancelable(false);
         builder.setMessage("Session expirée")
                 .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -22,6 +23,8 @@ public class Dialogue extends DialogFragment {
                     }
                 });
         // Create the AlertDialog object and return it
-        return builder.create();
+        Dialog d = builder.create();
+        d.setCanceledOnTouchOutside(false);
+        return d;
     }
 }
