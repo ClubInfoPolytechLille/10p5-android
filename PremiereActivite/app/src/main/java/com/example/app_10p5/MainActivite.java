@@ -41,7 +41,7 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
     public static final int STATE_ANNULER= 6;
     public static final int STATE_REFAIRE = 7;
 
-    public static final long EXPIRATION = 1000*10*1;
+    public static final long EXPIRATION = 1000*60*10;
 
     private int mState;
     private String mToken;
@@ -72,11 +72,13 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
         mTimerRunnable = new Runnable() {
             @Override
             public void run() {
-                if(System.currentTimeMillis() - mTimeToken >= EXPIRATION){
-                    afficherPopup();
-                }
-                else{
-                    mTimerHandler.postDelayed(this, 5000);
+                if(TextUtils.getTrimmedLength(mToken) == 30){
+                    if(System.currentTimeMillis() - mTimeToken >= EXPIRATION){
+                        afficherPopup();
+                    }
+                    else{
+                        mTimerHandler.postDelayed(this, 5000);
+                    }
                 }
             }
         };
