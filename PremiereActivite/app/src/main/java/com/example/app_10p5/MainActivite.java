@@ -391,9 +391,16 @@ public class MainActivite extends Activity implements ASyncResponse, main_tab_fr
         super.onNewIntent(intent);
         Fragment frag = getFragmentManager().findFragmentById(R.id.fragment_container);
 
-        if(mState != STATE_RIEN && frag instanceof NFCFragment){
-            NFCFragment nfc = (NFCFragment) frag;
-            nfc.handleIntent(intent);
+        if(NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())){
+            if(mState != STATE_RIEN && frag instanceof NFCFragment){
+                NFCFragment nfc = (NFCFragment) frag;
+                nfc.handleIntent(intent);
+            }
+            else if(mState == STATE_RIEN && frag instanceof ConnectionFragment){
+                mState = STATE_CONNEXION;
+                ConnectionFragment co = (ConnectionFragment) frag;
+                co.handleIntent(intent);
+            }
         }
     }
 

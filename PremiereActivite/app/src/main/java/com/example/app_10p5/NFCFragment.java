@@ -1,6 +1,5 @@
 package com.example.app_10p5;
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.nfc.NfcAdapter;
@@ -19,14 +18,9 @@ import java.util.HashMap;
 /**
  * Created by Jean-loup Beaussart on 05/05/2016.
  */
-public class NFCFragment extends Fragment {
+public class NFCFragment extends NFC {
     private HashMap<String, String> mParam;
     private String mAPI;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -76,32 +70,12 @@ public class NFCFragment extends Fragment {
         return ret;
     }
 
-    // Convertit l'array de byte en chaîne hexadécimale (si le byte = 0x63, str = "63").
-    private String ByteArrayToHexString(byte [] inarray) {
-        int i, j, in;
-        String [] hex = {"0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"};
-        String out= "";
-        for(j = 0 ; j < inarray.length ; ++j)
-        {
-            in = (int) inarray[j] & 0xff;
-            i = (in >> 4) & 0x0f;
-            out += hex[i];
-            i = in & 0x0f;
-            out += hex[i];
-        }
-        return out;
-    }
-
-
-
+    @Override
     public void handleIntent(Intent intent){
-        if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
-            String id_carte = ByteArrayToHexString(intent.getByteArrayExtra(NfcAdapter.EXTRA_ID));
-            mParam.put("idCarte", id_carte);
-            clientAPI();
-        }
+        String id_carte = ByteArrayToHexString(intent.getByteArrayExtra(NfcAdapter.EXTRA_ID));
+        mParam.put("idCarte", id_carte);
+        clientAPI();
     }
-
 
 
     public void clientAPI() {
